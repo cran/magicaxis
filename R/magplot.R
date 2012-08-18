@@ -1,5 +1,6 @@
 magplot <-
-function(x,y,xlab,ylab,unlog=FALSE,n=5,...){
-plot(x,y,axes=F,xlab='',ylab='',main='',...)
-magaxis(n=n,xlab=xlab,ylab=ylab,unlog=unlog,box=T)
+function(x,y,log='',xlab=NULL,ylab=NULL,unlog='Auto',majorn=5,minorn=5,main='',labels=TRUE,crunch=TRUE,logpretty=TRUE,...){
+if(missing(y)) plot(x,axes=F,xlab='',ylab='',main=main,log=log,...)
+else plot(x,y,axes=F,xlab='',ylab='',main='',log=log,...)
+magaxis(majorn=majorn,minorn=minorn,xlab=xlab,ylab=ylab,labels=labels,unlog=unlog,box=T,crunch=crunch,logpretty=logpretty)
 }

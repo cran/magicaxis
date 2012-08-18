@@ -1,7 +1,10 @@
-097a38127d947a43edb96e67cbbc60cf *DESCRIPTION
+68ea6f38441dd0ae2ec79b97779b8bc6 *CHANGELOG
+290444aaf39e894917c98549902f1093 *DESCRIPTION
 8b54e5a89fbda3af5e077053d40bec76 *NAMESPACE
-12d1459f7e03078d11e09bae80557da2 *R/magaxis.R
-40cf8ece0794af31402dc5ac999a3b86 *R/magplot.R
-7af7fe7638ea9b8047a2ada507d404d4 *man/magaxis.Rd
-9ea64e89a7e5dc4df4f610d32eb14579 *man/magicaxis-package.Rd
-593c136b0c8fd23491eaf89496d6e0ce *man/magplot.Rd
+3dcddffe4176a5bf8f49633eab8df7b2 *R/magaxis.R
+bb872fc40573d8b82dd7457591379513 *R/maglab.R
+e86052be8eb6794815adc8838b272e6e *R/magplot.R
+9be4dd3cf79f5e7500a304321afda775 *man/magaxis.Rd
+13791368177c76188b568a2162925b1d *man/magicaxis-package.Rd
+1ad772b6f534122898ceca1f4a8dc31e *man/maglab.Rd
+3b61ff83128d8973979a7a304660bbea *man/magplot.Rd

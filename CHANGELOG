@@ -1,0 +1,23 @@
+v1.0
+
+Not released on CRAN.
+
+v1.1
+
+CRAN legal- passed all checks.
+
+v1.2
+
+Bug Fixes:
+
+x and y axis limits can now be reversed without error
+
+New features:
+
+magplot parses better to plot, allowing generic plotting of plot.density plot.histogram etc.
+
+Improved the behviour of tick labelling by making use of the axis function (which tries hard to avoid text collisions).
+
+Generalised the labelling system with a mid level function maglab. This makes it easier for the end user to cope with specific scenarios where the default behaviour is not desired.
+
+Added more flexibility to control the outcome from magplot, meaning users should not need to access magaxis and maglab in most scenarios.
