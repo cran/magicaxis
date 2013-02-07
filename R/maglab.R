@@ -1,9 +1,11 @@
 maglab <-
-function(lims,n,log=FALSE,exptext=TRUE,crunch=TRUE,logpretty=TRUE,usemultloc=FALSE,multloc=c(1,2,5)){
+function(lims,n,log=FALSE,exptext=TRUE,crunch=TRUE,logpretty=TRUE,usemultloc=FALSE,multloc=c(1,2,5),prettybase=10){
+lims=lims/(prettybase/10)
 if(log){if(usemultloc==F){lims=log10(lims)}}
 if(missing(n)){labloc=pretty(lims)}else{labloc=pretty(lims,n)}
+if(log){labloc=labloc+log10(prettybase/10)}else{labloc=labloc*(prettybase/10)}
 if(log){
-    if(log){labloc=labloc[labloc %% 1==0]}
+    if(log){labloc=labloc[round(labloc -log10(prettybase/10),10) %% 1==0];labloc=round(labloc,10)}
     if(usemultloc==F){labloc=10^labloc;tickloc=labloc}
     if(usemultloc){
         labloc={}

@@ -8,7 +8,7 @@ Makes scientific plots based on magaxis axes. Particularly designed for log plot
 Utilises base plot for the most part, but the axis drawing is replaced by a call to the magaxis fuction.
 }
 \usage{
-magplot(x,y,log='',xlab=NULL,ylab=NULL,unlog='Auto',majorn=5,minorn=5,main='',labels=TRUE,crunch=TRUE,logpretty=TRUE,...)
+magplot(x,y,log='',xlab=NULL,ylab=NULL,unlog='Auto',majorn=5,minorn=5,main='',labels=TRUE,crunch=TRUE,logpretty=TRUE,prettybase=10,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,10 +31,10 @@ If desired, label for y-axis. Default produces no label.
 unlog argument to be passed to magaxis. If axis has been explicitly logged (e.g. log10(x)) then this will produce logged axis marking/ labelling if set to TRUE. If length is 1 then this value is used for all axes. Otherwise should be of length 4 (for the 4 sides). Can also take the text argument 'x', 'y', 'xy' or 'yx', where these refer to which axes have been logged.
 }
   \item{majorn}{
-The target number of major axis sub-divisions for pretty plotting.
+The target number of major axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
 }
   \item{minorn}{
-The target number of major axis sub-divisions for pretty plotting.
+The target number of major axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
 }
   \item{main}{
 Title for the plot. Default is no title.
@@ -47,6 +47,9 @@ In cases where the scientific text would be written as 1x10^8, should the 1x be 
 }
   \item{logpretty}{
 Should the major-ticks only be located at powers of 10. This changes cases where ticks are placed at 1, 3.1, 10, 31, 100 etc to 1, 10, 100. If length is 1 then this value is used for all axes. Otherwise should be of length 4 (for the 4 sides). TRUE by default.
+}
+  \item{prettybase}{
+The unit of repitition desired. By default it is 10, implying a pretty plot is one with marks at 10, 20, 30 etc. If you are plotting degrees then it might be prettier to display 90, 180, 270 etc. In which case prettybase should be set to 90. If log=TRUE then the reference location of 10 is changed, so in the previous example the labels generated would be at 9, 90, 900 etc rather than the deafult of 1, 10, 100 etc. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side.
 }
   \item{\dots}{
 Further arguments to be passed to base plot.

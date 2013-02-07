@@ -35,3 +35,15 @@ I've fixed a couple of plot label formatting issues. This fixes some situations 
 New features:
 
 Allowed nice printing of smaller dynamic ranges in log plots by using powers of 10 times 1, 2 and 5 when the range covered is less than or equal to 50.
+
+v1.4
+
+Bug Fixes:
+
+Clarified some help entries, and fixed some typos.
+
+Fixed bug with logpretty in magaxis that meant it wasn't dealing with vector arguments correctly.
+
+Fixed majorn minorn so they can be defined separately for each axis.
+
+TODO:	Add option to define the pretty gap to aim for (useful for degrees which are 45/90 rather than 50/100).

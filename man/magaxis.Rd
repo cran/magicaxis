@@ -8,7 +8,7 @@ Create nice axes for scientific plots. Particularly designed for log plotting.
 Code to generate nicely arranged axes for scientific plots, including minor tick marks. It supports log settings and can unclog axes that have been logged inline by the user.
 }
 \usage{
-magaxis(side=1:4,majorn=5,minorn=5,tcl=0.5,ratio=0.5,labels=TRUE,unlog='Auto',tline=0.5,mtline=2,xlab=NULL,ylab=NULL,box=FALSE,crunch=TRUE,logpretty=TRUE,...)
+magaxis(side=1:4,majorn=5,minorn=5,tcl=0.5,ratio=0.5,labels=TRUE,unlog='Auto',tline=0.5,mtline=2,xlab=NULL,ylab=NULL,box=FALSE,crunch=TRUE,logpretty=TRUE,prettybase=10,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -16,22 +16,22 @@ magaxis(side=1:4,majorn=5,minorn=5,tcl=0.5,ratio=0.5,labels=TRUE,unlog='Auto',tl
 The side to be used for axis labelling in the same sense as the base axis function. Multiple entries are allowed. If blank all 4 axes are drawn.
 }
   \item{majorn}{
-The target number of major-axis sub-divisions for pretty plotting.
+The target number of major-axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
 }
   \item{minorn}{
-The target number of minor-axis sub-divisions for pretty plotting.
+The target number of minor-axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
 }
   \item{tcl}{
 The length of major ticks. By default these face into the plot (in common with scientific plotting).
 }
   \item{ratio}{
-Ratio of minor to major tick marks.
+Ratio of minor to major tick mark lengths.
 }
   \item{labels}{
 Specifies whether major-axis ticks should be labelled for each axis. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Default is to label all axes.
 }
   \item{unlog}{
-Determines if axis labels should be unlogged. If axis is found to be logged in par('usr') then the minor ticks are automatically log spaced, however "unlog" still controls how the labelling is done: either logged form (FALSE) or exponent form (TRUE). If axis has been explicitly logged (e.g. log10(x)) then this will can produce exponential axis marking/ labelling if set to TRUE. This case will also produce log minor tick marks. If length of unclog is 1 and length of side is longer than 1 then the assigned unlog value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Can also take the text argument 'x', 'y', 'xy' or 'yx', where these refer to which axes have been logged. If left at the default of `Auto' then unlog is assumed to be true when the axis in question is logged, and false otherwise.
+Determines if axis labels should be unlogged. If axis is found to be logged in par('usr') then the minor ticks are automatically log spaced, however "unlog" still controls how the labelling is done: either logged form (FALSE) or exponent form (TRUE). If axis has been explicitly logged (e.g. log10(x)) then this will can produce exponential axis marking/ labelling if set to TRUE. This case will also produce log minor tick marks. If length of unlog is 1 and length of side is longer than 1 then the assigned unlog value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Can also take the text argument 'x', 'y', 'xy' or 'yx', where these refer to which axes have been logged. If left at the default of `Auto' then unlog is assumed to be true when the axis in question is logged, and false otherwise.
 }
   \item{tline}{
 Number of lines separating labels from axis.
@@ -53,6 +53,9 @@ In cases where the scientific text would be written as 1x10^8, should the 1x be 
 }
   \item{logpretty}{
 Should the major-ticks only be located at powers of 10. This changes cases where ticks are placed at 1, 3.1, 10, 31, 100 etc to 1, 10, 100. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. TRUE by default.
+}
+  \item{prettybase}{
+The unit of repitition desired. By default it is 10, implying a pretty plot is one with marks at 10, 20, 30 etc. If you are plotting degrees then it might be prettier to display 90, 180, 270 etc. In which case prettybase should be set to 90. If log=TRUE then the reference location of 10 is changed, so in the previous example the labels generated would be at 9, 90, 900 etc rather than the deafult of 1, 10, 100 etc. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side.
 }
   \item{\dots}{
 Other arguments to be passed to base axis function.
