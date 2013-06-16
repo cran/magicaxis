@@ -1,5 +1,5 @@
-magaxis <-
-function(side=1:4,majorn=5,minorn=5,tcl=0.5,ratio=0.5,labels=TRUE,unlog='Auto',tline=0.5,mtline=2,xlab=NULL,ylab=NULL,box=FALSE,crunch=TRUE,logpretty=TRUE,prettybase=10,...){
+magaxis<-
+function(side=1:4, majorn=5, minorn=5, tcl=0.5, ratio=0.5, labels=TRUE, unlog='Auto', tline=0.5, mtline=2, xlab=NULL, ylab=NULL, box=FALSE, crunch=TRUE, logpretty=TRUE, prettybase=10, hersh=FALSE, family='sans',...){
 majornlist=majorn
 minornlist=minorn
 unloglist=unlog
@@ -26,6 +26,12 @@ if(length(crunchlist) != length(side)){stop('Length of crunch vector mismatches 
 if(length(logprettylist) != length(side)){stop('Length of logpretty vector mismatches number of axes!')}
 if(length(prettybaselist) != length(side)){stop('Length of prettybase vector mismatches number of axes!')}
 
+currentfamily=par('family')
+if(hersh & family=='serif'){par(family='HersheySerif')}
+if(hersh & family=='sans'){par(family='HersheySans')}
+if(hersh==F & family=='serif'){par(family='serif')}
+if(hersh==F & family=='sans'){par(family='sans')}
+
 for(i in 1:length(side)){
 		currentside=side[i]
     majorn=majornlist[i]
@@ -47,21 +53,23 @@ for(i in 1:length(side)){
         if(logged | unlog){usemultloc=(10^lims[2])/(10^lims[1])<50}else{usemultloc=F}
         	  		
   		if(unlog){
-        sci.tick=maglab(10^lims,n=majorn,log=T,exptext=T,crunch=crunch,logpretty=logpretty,usemultloc=usemultloc,prettybase=prettybase)
+        sci.tick=maglab(10^lims,n=majorn,log=T,exptext=T,crunch=crunch,logpretty=logpretty,usemultloc=usemultloc,prettybase=prettybase, hersh=hersh)
         major.ticks = log10(sci.tick$tickat)
   		uselabels = sci.tick$exp
   		labloc = log10(sci.tick$labat)
-        if(usemultloc==F){minors = log10(pretty(10^major.ticks[1:2],minorn+2))-major.ticks[1]}
+        if(usemultloc==F){
+          minors = log10(pretty(10^major.ticks[1:2],minorn+2))-major.ticks[1]
+        }
  		}
  		if(logged & unlog==F){
- 		sci.tick=maglab(10^lims,n=majorn,log=T,exptext=F,crunch=crunch,logpretty=logpretty,usemultloc=usemultloc,prettybase=prettybase)
+ 		sci.tick=maglab(10^lims,n=majorn,log=T,exptext=F,crunch=crunch,logpretty=logpretty,usemultloc=usemultloc,prettybase=prettybase, hersh=hersh)
  		major.ticks = log10(sci.tick$tickat)
   		uselabels = sci.tick$exp
   		labloc = log10(sci.tick$labat)
  		if(usemultloc==F){minors = log10(pretty(10^major.ticks[1:2],minorn+2))-major.ticks[1]}
  		}
  		if(logged==F & unlog==F){
- 		sci.tick=maglab(lims,n=majorn,log=F,exptext=F,prettybase=prettybase)
+ 		sci.tick=maglab(lims,n=majorn,log=F,exptext=F,prettybase=prettybase, hersh=hersh)
  		major.ticks = sci.tick$tickat
   		uselabels = sci.tick$exp
   		labloc = sci.tick$labat
@@ -83,7 +91,8 @@ for(i in 1:length(side)){
 		else axis(currentside,at=minor.ticks,tcl=tcl*ratio,labels=FALSE)
 		}
     if(is.null(xlab)==F & currentside==1){mtext(xlab,1,line=mtline)}
-    if(is.null(ylab)==F & currentside==2){mtext(ylab,2,line=mtline)}
+    if(is.null(ylab)==F & currentside==2){mtext(ylab,2,line=mtline)}  
 }
 if(box){box()}
+par(family=currentfamily)
 }

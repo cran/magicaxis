@@ -5,10 +5,11 @@
 Calculate pretty tick locations and scientifically formatted expressions
 }
 \description{
-Utilises pretty for the major-tick locations, but makes prettier decisions if log axes are being used. Translates the default text into nicely formatted expressions- this is particularly successful when axes are logged and exponents are used since formats like 1e5 should not be used in scientific academic journals. When dynamic range is 50 or less on the axis range factors of 10 times 1, 2 and 5 are used instead of powers of 10 alone.
+Utilises pretty for the major-tick locations, but makes prettier decisions if log axes are being used. Translates the default text into nicely formatted expressions- this is particularly successful when axes are logged and exponents are used since formats like 1e5 should not be used in scientific academic journals.
 }
 \usage{
-maglab(lims,n,log=FALSE,exptext=TRUE,crunch=TRUE,logpretty=TRUE,usemultloc=FALSE,multloc=c(1,2,5),prettybase=10)
+maglab(lims, n, log=FALSE, exptext=TRUE, crunch=TRUE, logpretty=TRUE,
+usemultloc=FALSE, multloc=c(1,2,5), prettybase=10, hersh=FALSE, trim=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -38,6 +39,12 @@ If usemultloc is TRUE then multloc provides the multiples of powers of 10 for th
 }
   \item{prettybase}{
 The unit of repitition desired. By default it is 10, implying a pretty plot is one with marks at 10, 20, 30 etc. If you are plotting degrees then it might be prettier to display 90, 180, 270 etc. In which case prettybase should be set to 90. If log=TRUE then the reference location of 10 is changed, so in the previous example the labels generated would be at 9, 90, 900 etc rather than the deafult of 1, 10, 100 etc.
+}
+  \item{hersh}{
+Determines whether the text format output by maglab should be Hershey vector font compatable text (TRUE), or normal plotmath style expressions (FALSE).
+}
+  \item{trim}{
+If trim is TRUE the outputs are not allowed to exceed the stated limits, if FALSE then the whole range of pretty values calculated are used. This will usually extend beyond the limits to ensure the plots look pretty, but if maglab is being used for something other than plotting axis labels then trimmed values might be useful.
 }
 }
 \details{

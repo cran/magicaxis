@@ -2,8 +2,8 @@ Package: magicaxis
 Type: Package
 Title: Pretty scientific plotting with minor-tick and log minor-tick
         support
-Version: 1.4
-Date: 2013-02-07
+Version: 1.5
+Date: 2013-06-16
 Author: Aaron Robotham
 Maintainer: Aaron Robotham <aaron.robotham@uwa.edu.au>
 Description: Functions to make useful (and pretty) plots for scientific
@@ -11,7 +11,7 @@ Description: Functions to make useful (and pretty) plots for scientific
         plotting, with particular emphasis on making attractive log
         axis plots.
 License: GPL-2
-Packaged: 2013-04-02 13:57:46 UTC; aaron
+Packaged: 2013-06-15 16:03:19 UTC; aaron
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2013-04-03 16:05:43
+Date/Publication: 2013-06-15 18:40:20

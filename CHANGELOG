@@ -12,7 +12,7 @@ Bug Fixes:
 
 x and y axis limits can now be reversed without error
 
-New features:
+New Features:
 
 magplot parses better to plot, allowing generic plotting of plot.density plot.histogram etc.
 
@@ -32,7 +32,7 @@ Changed code to use mtext instead of title for axis labels- this means labels ar
 
 I've fixed a couple of plot label formatting issues. This fixes some situations where expressions were not being used, and changes 0x10^0 to 0.
 
-New features:
+New Features:
 
 Allowed nice printing of smaller dynamic ranges in log plots by using powers of 10 times 1, 2 and 5 when the range covered is less than or equal to 50.
 
@@ -44,6 +44,23 @@ Clarified some help entries, and fixed some typos.
 
 Fixed bug with logpretty in magaxis that meant it wasn't dealing with vector arguments correctly.
 
-Fixed majorn minorn so they can be defined separately for each axis.
+New Features:
 
-TODO:	Add option to define the pretty gap to aim for (useful for degrees which are 45/90 rather than 50/100).
+Added vector support for majorn minorn so they can be defined separately for each axis.
+
+Added option to define the pretty gap to aim for (useful for degrees which are 45/90 rather than 50/100). This is prettybase- as an example this can be set to 45 for plotting degrees nicely.
+
+v1.5
+
+Added option for fully Hershey font output.
+
+Added magerr error bar plotting function.
+
+Added magmap variable mapping functions to allow for pretty and easy colour scaling.
+
+Added a hard trim option to maglab to ensure no values fall outside of original range.
+
+Fixed some help entries (nothing serious).
+
+Fixed bug in usemultloc that extended the range beyond that desired.
+
