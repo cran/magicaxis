@@ -64,3 +64,15 @@ Fixed some help entries (nothing serious).
 
 Fixed bug in usemultloc that extended the range beyond that desired.
 
+v1.6
+
+Added the magrun plotting feature, which allows for easy generation of running medians and other quantiles.
+
+Fixed some help file entries
+
+Added pretty in-plot colour bar. This makes 'magic' use of the plotrix version, i.e. it works hard to produce a useful output painlessly.
+
+TO DO:
+
+Add better in-plot legends.
+

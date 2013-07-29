@@ -1,8 +1,8 @@
 magerr=function(x, y, xlo=FALSE, ylo=FALSE, xhi=xlo, yhi=ylo, log='', length=0.02,...){
-xhi=x+xhi
-xlo=x-xlo
-yhi=y+yhi
-ylo=y-ylo
+xhi=x+abs(xhi)
+xlo=x-abs(xlo)
+yhi=y+abs(yhi)
+ylo=y-abs(ylo)
 if(log=='x'){
 	sel=which(xlo<=0)
 	xlo[sel]=1e-300

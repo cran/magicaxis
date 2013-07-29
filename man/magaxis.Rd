@@ -2,10 +2,10 @@
 \alias{magaxis}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Create nice axes for scientific plots. Particularly designed for log plotting.
+Magically pretty axes
 }
 \description{
-Code to generate nicely arranged axes for scientific plots, including minor tick marks. It supports log settings and can unclog axes that have been logged inline by the user. When the dynamic range is 50 or less and axis is logged, axis range factors of 10 times 1, 2 and 5 are used instead of powers of 10 alone.
+This function generates nicely arranged axes for scientific plots, including minor tick marks. It supports log settings and can unclog axes that have been logged inline by the user. When the dynamic range is 50 or less and axis is logged, axis range factors of 10 times 1, 2 and 5 are used instead of powers of 10 alone.
 }
 \usage{
 magaxis(side=1:4, majorn=5, minorn=5, tcl=0.5, ratio=0.5, labels=TRUE,
@@ -75,9 +75,15 @@ This function tries hard to make nice plots for scientific papers.
 \value{
 No output. Run for the side effect of producing nice plotting axes.
 }
+
 \author{
 Aaron Robotham
 }
+
+\seealso{
+\code{\link{magplot}},\code{\link{maglab}},\code{\link{magerr}},\code{\link{magmap}},\code{\link{magrun}}
+}
+
 \examples{
 x=10^{1:9}
 y=1:9

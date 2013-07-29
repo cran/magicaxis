@@ -2,7 +2,7 @@
 \alias{maglab}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Calculate pretty tick locations and scientifically formatted expressions
+Pretty scientific labelling
 }
 \description{
 Utilises pretty for the major-tick locations, but makes prettier decisions if log axes are being used. Translates the default text into nicely formatted expressions- this is particularly successful when axes are logged and exponents are used since formats like 1e5 should not be used in scientific academic journals.
@@ -64,6 +64,10 @@ This function is a mid level routine for producing nice ticks and text, with par
 
 \author{
 Aaron Robotham
+}
+
+\seealso{
+\code{\link{magplot}},\code{\link{magaxis}},\code{\link{magerr}},\code{\link{magmap}},\code{\link{magrun}}
 }
 
 \examples{

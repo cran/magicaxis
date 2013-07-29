@@ -2,14 +2,14 @@
 \alias{magmap}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Map vector values onto a different range, with support for log stretching.
+Value remapper
 }
 \description{
 This function allows the use to remap a vector of values onto a different system. For instance you might have values stretching from -10 to 100 which you want mapped from 0 to 2/3 so you can then sue the output as an input for point colour or size. It allows clipping of values, rejection of bad values, and log stretching.
 }
 \usage{
-magmap(data, lo = 0, hi = 1, flip = FALSE, range = c(0, 2/3),
-type = "quan", log = FALSE, bad = NA)
+magmap(data, lo = 0, hi = 1, flip = FALSE, range = c(0, 2/3), type = "quan",
+log = FALSE, bad = NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,7 +29,7 @@ Should the scaling be flipped. This allows numbers from 0 to 10 to be mapped fro
 The range of the output mapping.
 }
   \item{type}{
-The type of mapping attempted. Options are 'quan' (default), 'num', 'sig' and 'rank'. 'quan' means the lo and hi options are interpreted as the quantile limits to clip the data at (so lo=0.05 and hi 0.95 would clip the data at the 5% and 95% quantile limits and scale values between these). 'num' interprets lo and hi as the exact values to clip the data at and scale between. 'sig' treats lo and hi as the sigma offsets in a Normal distribution, with the probabilities at these positions used to clip and scale that data (so lo=-1 and hi=1 is interpretted as +/- 1 sigma, so the data is clipped and scaled at the 16% and 84% levels, i.e. the 1 sigma range). 'rank' means the data mapping is done by rank value only, with lo and hi specifying the quantile limits used to clip and scale the ranks. In all cases lo and hi clipped values are set to the relevant extreme values of 'range'.
+The type of mapping attempted. Options are 'quan' (default), 'num', 'sig' and 'rank'. 'quan' means the lo and hi options are interpreted as the quantile limits to clip the data at (so lo=0.05 and hi 0.95 would clip the data at the 5\% and 95\% quantile limits and scale values between these). 'num' interprets lo and hi as the exact values to clip the data at and scale between. 'sig' treats lo and hi as the sigma offsets in a Normal distribution, with the probabilities at these positions used to clip and scale that data (so lo=-1 and hi=1 is interpretted as +/- 1 sigma, so the data is clipped and scaled at the 16\% and 84\% levels, i.e. the 1 sigma range). 'rank' means the data mapping is done by rank value only, with lo and hi specifying the quantile limits used to clip and scale the ranks. In all cases lo and hi clipped values are set to the relevant extreme values of 'range'.
 }
   \item{log}{
 If TRUE log mapping is used. If range is 1 and 100 and log=FALSE the midpoint in the mapping will be 50.5, if log=TRUE the midpoint becomes 10. This enhances the local dynamic range of the mapping for data that has a logarithmic distribution.

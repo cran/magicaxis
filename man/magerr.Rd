@@ -2,7 +2,7 @@
 \alias{magerr}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Error bar plotting.
+Error bar plotting
 }
 \description{
 A function to dd x and y error bars to plots. Low and high error bars can be generated.
@@ -20,16 +20,16 @@ x location of data.
 y location of data.
 }
   \item{xlo}{
-Error on the low side for x values.
+Error on the low side for x values. This can be positive or negative- the absolute vaue is used.
 }
   \item{ylo}{
-Error on the low side for y values.
+Error on the low side for y values. This can be positive or negative- the absolute vaue is used.
 }
   \item{xhi}{
-Error on the high side for x values. By default this will inherit the xlo value.
+Error on the high side for x values. This can be positive or negative- the absolute vaue is used. By default this will inherit the xlo value.
 }
   \item{yhi}{
-Error on the high side for y values. By default this will inherit the ylo value.
+Error on the high side for y values. This can be positive or negative- the absolute vaue is used. By default this will inherit the ylo value.
 }
   \item{log}{
 Set which axes are logged. Allowed values are 'x', 'y', 'xy', 'yx' or '' (default, which means axes are not logged). This is not strictly required, but it is used to catch errors that drop below 0, setting them instead to a very small value that will ensure a bar is still drawn.
@@ -48,6 +48,10 @@ Called for the side effect of plotting error bars.
 
 \author{
 Aaron Robotham
+}
+
+\seealso{
+\code{\link{magplot}},\code{\link{magaxis}},\code{\link{maglab}},\code{\link{magmap}},\code{\link{magrun}}
 }
 
 \examples{
