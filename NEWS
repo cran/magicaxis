@@ -72,6 +72,10 @@ Fixed some help file entries
 
 Added pretty in-plot colour bar. This makes 'magic' use of the plotrix version, i.e. it works hard to produce a useful output painlessly.
 
+v 1.7
+
+Fixed error in magmap that meant flip was always from 0 -> range[2]-range[1], not from range[1] -> range[2]
+
 TO DO:
 
 Add better in-plot legends.

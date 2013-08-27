@@ -76,12 +76,12 @@ for(i in 1:length(side)){
   		minors = pretty(major.ticks[1:2],minorn+2)-major.ticks[1]
  		}
 
- 		if(logged){axis(side=currentside,at=10^major.ticks,tcl=tcl,labels=FALSE,mgp=c(2,tline,0))}
- 		else axis(side=currentside,at=major.ticks,tcl=tcl,labels=FALSE,mgp=c(2,tline,0))
+ 		if(logged){axis(side=currentside,at=10^major.ticks,tcl=tcl,labels=FALSE,mgp=c(2,tline,0),...)}
+ 		else axis(side=currentside,at=major.ticks,tcl=tcl,labels=FALSE,mgp=c(2,tline,0),...)
  		
   		if(labels){
-  		    if(logged){axis(side=currentside,at=10^labloc,tick=F,labels=uselabels,mgp=c(2,tline,0))}
-  		    else axis(side=currentside,at=labloc,tick=F,labels=uselabels,mgp=c(2,tline,0))
+  		    if(logged){axis(side=currentside,at=10^labloc,tick=F,labels=uselabels,mgp=c(2,tline,0),...)}
+  		    else axis(side=currentside,at=labloc,tick=F,labels=uselabels,mgp=c(2,tline,0),...)
   		}
   		
   		if(usemultloc==F){

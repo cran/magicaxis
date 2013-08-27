@@ -33,7 +33,7 @@ if(lo<hi){
 	data[data>hi]=hi
 	data=data-lo
 	data=range[1]+(data*(range[2]-range[1])/(hi-lo))
-	if(flip){data=range[2]-data}
+	if(flip){data=range[2]-data+range[1]}
 	if(log){lo=10^lo;hi=10^hi}
 }
 return(list(map=data,datalim=c(lo,hi),maplim=range,loclip=length(which(data[good]==range[1]))/length(data[good]),hiclip=length(which(data[good]==range[2]))/length(data[good])))
