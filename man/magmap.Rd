@@ -35,7 +35,7 @@ The type of mapping attempted. Options are 'quan' (default), 'num', 'sig' and 'r
 If TRUE log mapping is used. If range is 1 and 100 and log=FALSE the midpoint in the mapping will be 50.5, if log=TRUE the midpoint becomes 10. This enhances the local dynamic range of the mapping for data that has a logarithmic distribution.
 }
   \item{bad}{
-Sets the value that NA, NaN and infinite input data should be set to.
+Sets the value that NA, NaN and infinite input data should be set to in the final map output.
 }
 }
 

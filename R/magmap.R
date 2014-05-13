@@ -27,8 +27,7 @@ if(log & hi==0){stop('hi value is 0 and scale is step to log- this is not allowe
 if(lo>hi){stop('lo>hi is not allowed')}
 if(lo==hi){data=rep((range[2]+range[1])/2,length(data))}
 if(lo<hi){
-	if(log){data=log10(data);lo=log10(lo);hi=log10(hi)}
-	data[! good]=bad
+	if(log){data=suppressWarnings(log10(data));lo=log10(lo);hi=log10(hi)}
 	data[data<lo]=lo
 	data[data>hi]=hi
 	data=data-lo
@@ -36,6 +35,7 @@ if(lo<hi){
 	if(flip){data=range[2]-data+range[1]}
 	if(log){lo=10^lo;hi=10^hi}
 }
+data[! good]=bad
 return(list(map=data,datalim=c(lo,hi),maplim=range,loclip=length(which(data[good]==range[1]))/length(data[good]),hiclip=length(which(data[good]==range[2]))/length(data[good])))
 }
 
