@@ -1,4 +1,4 @@
-magbar=function(position='topright',range=c(0,1),orient='v',log=FALSE,col=hsv(h=seq(2/3,0,len=100)),scale=c(1/4,1/20),inset=1/40,labN=5,title='',titleshift=0,centrealign='rb'){
+magbar=function(position='topright',range=c(0,1),orient='v',log=FALSE,col=hsv(h=seq(2/3,0,len=100)),scale=c(1/4,1/20),inset=1/40,labN=5,title='',titleshift=0,centrealign='rb',clip=''){
 usercoord=par()$usr
 xlogcheck=FALSE;ylogcheck=FALSE
 if(par()$xlog){par(xlog=FALSE);par(usr=c(log10(par()$usr[1:2]),par()$usr[3:4]));xlogcheck=TRUE}
@@ -31,9 +31,17 @@ if(orient=='v'){
 	if(length(grep('right',position))>0){align='lt';xl=xhi-xdiff*inset-xdiff*scale[2];xr=xhi-xdiff*inset}
 }
 
-legend=maglab(range,labN,log=log)
-roughNscale=(max(legend$tickat)-min(legend$tickat))/(range[2]-range[1])
-colremap=magmap(data=seq(min(legend$tickat),max(legend$tickat),length=length(col)*roughNscale),lo=range[1],hi=range[2],type='num',range=c(1,length(col)))$map
+rangetemp=range
+legend=maglab(rangetemp,labN,log=log,trim=F)
+if(log){
+  rangetemp=log10(range)
+  legend$labat=log10(legend$labat)
+}
+
+roughNscale=(max(legend$labat)-min(legend$labat))/(rangetemp[2]-rangetemp[1])
+if(clip=='bg'){clip='NA'}
+
+colremap=magmap(data=seq(min(legend$labat),max(legend$labat),length=length(col)*roughNscale),lo=rangetemp[1],hi=rangetemp[2],type='num',range=c(1,length(col)),clip=clip)$map
 col=col[round(colremap,digits=0)]
 
 if(orient=='v'){color.legend(xl,yb,xr,yt,legend=legend$exp,rect.col=col,align=align,gradient='y')}
