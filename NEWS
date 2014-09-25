@@ -100,12 +100,26 @@ Feature: magbar can now simply show the background outside the clipped range (pr
 
 Fixed: log scaling had issues in magbar when the pretty scale went outside the nominal range (the mapping was not correct in some circumstances).
 
-Fixed:  box in magaxis now inherits the bty type from par.
+Fixed: box function in magaxis now inherits the bty type from par.
 
 Fixed: Various documentation typos.
 
 
-v 2.0 (in progress, not on CRAN yet)
+v 1.9.1
+
+Fixed: magplot now has side option to create segments of the plot axes. This is instead of using bty in par (which only affects the box in plot, not the axis labelling). I prefer my behaviour, i.e. you can generate ticks and tick labels on the side you want straight from magplot (which isn't possible with plot). This does mean magplot behaves slightly differently to plot, but this is unavoidable for the high level plotting I desire.
+
+v 1.9.2
+
+Added error ellispe option in magerr function.
+
+v 1.9.3 (in progress, not on CRAN yet)
+
+Added stretch option to magmap, which now takes arguments 'lin' for linear, 'log' for log, 'atanh' for atanh and 'asinh' for asinh. The option 'log' no longer exists in magmap, which could break code written prior to magicaxis v1.9.3.
+
+The background colour of the magcon image now extends beyond the limits of the data if necessary. 
+
+magerr now picks up the log state automatically, so log argument is no longer required.
 
 --
 
