@@ -8,9 +8,10 @@ Magically pretty plots
 Makes scientific plots based on magaxis axes. Particularly designed for log plotting. Utilises base plot for the most part, but the axis drawing is replaced by a call to the magaxis fuction.
 }
 \usage{
-magplot(x, y, log='', xlab=NULL, ylab=NULL, unlog='Auto', majorn=5, minorn=5,
-main='', labels=TRUE, crunch=TRUE, logpretty=TRUE, prettybase=10, hersh=FALSE,
-family='sans',side=1:2,frame.plot=TRUE,...)
+magplot(x, y, log = "", main = "", side = 1:2, majorn = 5, minorn = 5, tcl = 0.5,
+ratio = 0.5, labels = TRUE, unlog = "Auto", mgp = c(2,0.5,0), mtline = 2, xlab = NULL,
+ylab = NULL, crunch = TRUE, logpretty = TRUE, prettybase = 10, hersh = FALSE,
+family = "sans", frame.plot = TRUE, usepar=FALSE, ...) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,47 +24,62 @@ The y coordinates of points in the plot, optional if x is an appropriate structu
   \item{log}{
 log axis arguments to be passed to plot. E.g. use 'x', 'y', 'xy' or 'yx' as appropriate. Default '' assumes no logging of any axes.
 }
-  \item{xlab}{
-If desired, label for x-axis. Default produces no label.
-}
-  \item{ylab}{
-If desired, label for y-axis. Default produces no label.
-}
-  \item{unlog}{
-unlog argument to be passed to magaxis. If axis has been explicitly logged (e.g. log10(x)) then this will produce logged axis marking/ labelling if set to TRUE. If length is 1 then this value is used for all axes. Otherwise should be of length 4 (for the 4 sides: c(bottom,left,top,right)). Can also take the text argument 'x', 'y', 'xy' or 'yx', where these refer to which axes have been logged.
-}
-  \item{majorn}{
-The target number of major axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. Otherwise should be of length 4 (for the 4 sides: c(bottom,left,top,right)). Obvious reason for varying this is different pretty labelling between x and y axes.
-}
-  \item{minorn}{
-The target number of major axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. Otherwise should be of length 4 (for the 4 sides: c(bottom,left,top,right)). Obvious reason for varying this is different pretty labelling between x and y axes.
-}
   \item{main}{
 Title for the plot. Default is no title.
 }
+  \item{side}{
+The side to be used for axis labelling in the same sense as the base axis function (1=bottom, 2=left, 3=top, 4=right). A vector of multiple entries is allowed. By default, bottom and left axes are drawn (i.e. side 1 and 2). If side=FALSE then no sides or labels will be drawn at all.
+}
+  \item{majorn}{
+The target number of major-axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
+}
+  \item{minorn}{
+The target number of minor-axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
+}
+  \item{tcl}{
+The length of major tick marks as a fraction of the height of a line of text. By default these face into the plot (in common with scientific plotting) with a value of 0.5, rather than the R default of -0.5. It is possible to force magaxis to inherit directly from par by setting usepar=TRUE (see below). See \code{\link{par}} for more details.
+}
+  \item{ratio}{
+Ratio of minor to major tick mark lengths.
+}
   \item{labels}{
-labels argument to be passed to magaxis. Specifies whether major-axis ticks should be labelled for each axis. If length is 1 then this value is used for all axes. Otherwise should be of length 4 (for the 4 sides: c(bottom,left,top,right)). Default is to label all axes.
+Specifies whether major-axis ticks should be labelled for each axis. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Default is to label all axes.
+}
+  \item{unlog}{
+Determines if axis labels should be unlogged. If axis is found to be logged in par('usr') then the minor ticks are automatically log spaced, however "unlog" still controls how the labelling is done: either logged form (FALSE) or exponent form (TRUE). If axis has been explicitly logged (e.g. log10(x)) then this will can produce exponential axis marking/ labelling if set to TRUE. This case will also produce log minor tick marks. If length of unlog is 1 and length of side is longer than 1 then the assigned unlog value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Can also take the text argument 'x', 'y', 'xy' or 'yx', where these refer to which axes have been logged. If left at the default of `Auto' then unlog is assumed to be true when the axis in question is logged, and false otherwise.
+}
+  \item{mgp}{
+The margin line (in mex units) for the axis title, axis labels and axis line. This has different (i.e. prettier) defaults than R of c(2,0.5,0) rather than c(3,1,0). This pushes the numbers and labels nearer to the plot compared to the defaults. It is possible to force magaxis to inherit directly from par by setting usepar=TRUE (see below). See \code{\link{par}} for more details.
+}
+  \item{mtline}{
+Number of lines separating axis name from axis.
+}
+  \item{xlab}{
+x axis name.
+}
+  \item{ylab}{
+y axis name.
 }
   \item{crunch}{
-In cases where the scientific text would be written as 1x10^8, should the 1x be removed so it reads 10^8. TRUE by default.If length is 1 then this value is used for all axes. Otherwise should be of length 4 (for the 4 sides: c(bottom,left,top,right)).
+In cases where the scientific text would be written as 1x10^8, should the 1x be removed so it reads 10^8. TRUE by default. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side.
 }
   \item{logpretty}{
-Should the major-ticks only be located at powers of 10. This changes cases where ticks are placed at 1, 3.1, 10, 31, 100 etc to 1, 10, 100. If length is 1 then this value is used for all axes. Otherwise should be of length 4 (for the 4 sides: c(bottom,left,top,right)). TRUE by default.
+Should the major-ticks only be located at powers of 10. This changes cases where ticks are placed at 1, 3.1, 10, 31, 100 etc to 1, 10, 100. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. TRUE by default.
 }
   \item{prettybase}{
-The unit of repitition desired. By default it is 10, implying a pretty plot is one with marks at 10, 20, 30 etc. If you are plotting degrees then it might be prettier to display 90, 180, 270 etc. In which case prettybase should be set to 90. If log=TRUE then the reference location of 10 is changed, so in the previous example the labels generated would be at 9, 90, 900 etc rather than the deafult of 1, 10, 100 etc. If length is 1 and length of side is longer then this value is used for all axes. Otherwise should be of length 4 (for the 4 sides: c(bottom,left,top,right)).
+The unit of repitition desired. By default it is 10, implying a pretty plot is one with marks at 10, 20, 30 etc. If you are plotting degrees then it might be prettier to display 90, 180, 270 etc. In which case prettybase should be set to 90. If log=TRUE then the reference location of 10 is changed, so in the previous example the labels generated would be at 9, 90, 900 etc rather than the deafult of 1, 10, 100 etc. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side.
 }
   \item{hersh}{
-Determines whether all plot text should be passed using Hershey vector fonts. This applies to the axis labels (which are handled automatically) and the axis names. In the case of axis names the user must be careful to use the correct plot utils escape characters: http://www.gnu.org/software/plotutils/manual/en/html_node/Text-String-Format.html.
+To determines whether all plot text should be passed using Hershey vector fonts. This applies to the axis labels (which are handled automatically) and the axis names. In the case of axis names the user must be careful to use the correct plot utils escape characters: http://www.gnu.org/software/plotutils/manual/en/html_node/Text-String-Format.html.
 magaxis will return back to the current plotting family after the function has executed.}
   \item{family}{
 Specifies the plotting family to be used. Allowed options are 'sans' and 'serif'. Depending on whether hersh is TRUE or FALSE these otions are either applied to the Hershey vector fonts (hersh=TRUE) or the default R Helvetica font (hersh=FALSE). magaxis will return back to the current plotting family after the function has executed.
 }
-  \item{side}{
-The side to be used for axis labelling in the same sense as the base axis function. Multiple entries are allowed. If blank all 4 axes are drawn.
-}
   \item{frame.plot}{
-A logical indicating whether a box should be drawn around the plot.
+Logical indicating whether a box should be drawn around the plot.
+}
+  \item{usepar}{
+Logical indicating whether tcl and mgp should be forced to inherit the global par values. This might be preferred when you want to define global plot settings at the start of a script.
 }
   \item{\dots}{
 Further arguments to be passed to base plot.

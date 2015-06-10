@@ -38,7 +38,7 @@ If stretch='lin' linear output mapping is used. If stretch='log' logarithmic map
 A number to multiply the data by before applying the stretch. This only has a user impact for stretch='atan' and stretch='atanh' since it controls what parts of the data is in the linear or logarithmic regime of the stretch procedure.
 }
   \item{bad}{
-Sets the value that NA, NaN and infinite input data should be set to in the final map output.
+Sets the value that NA, NaN and infinite input data should be set to in the final map output. This should be thought of in the context of the range argument, i.e. if bad=range[1] then bad values will be the low range value and if bad=range[2] bad values will be the high range value.
 }
   \item{clip}{
 By default clipped values inherit the nearest lo/hi value (depending on which side they are clipped). Setting clip='NA' will set values outside the 'lo' and 'hi' values to be NA (currently this is the only other clip option).
@@ -56,7 +56,7 @@ If range is between 1 and 100 and stretch='lin' the midpoint in the mapping will
 The remapped data. This is the same length and order as the input data.
 }
    \item{datalim}{
-The a vector of the low and high limits actually applied to the data. Unless type='num' this will probably be different to 'lo' and 'hi'.
+The a vector of the low and high limits actually applied to the data. Unless type='num' this will probably be different to the lo and hi arguments provided.
 }
     \item{maplim}{
 The output range (same is the requested input range, but included for book-keeping).
@@ -97,10 +97,37 @@ magplot(temp[,1:2],col=hsv(h=magmap(temp[,4],stretch='asinh')$map))
 temp=cbind(temp,temp[,4]-10)
 magplot(temp[,1:2],col=hsv(h=magmap(temp[,5],stretch='atan')$map))
 magplot(temp[,1:2],col=hsv(h=magmap(temp[,5],stretch='asinh')$map))
+#effect of stretchscale
+magplot(temp[,1:2],col=hsv(h=magmap(temp[,5],stretch='atan',stretchscale=0.5)$map))
+magplot(temp[,1:2],col=hsv(h=magmap(temp[,5],stretch='atan',stretchscale=2)$map))
+magplot(temp[,1:2],col=hsv(h=magmap(temp[,5],stretch='asinh',stretchscale=0.5)$map))
+magplot(temp[,1:2],col=hsv(h=magmap(temp[,5],stretch='asinh',stretchscale=2)$map))
 
-#Combination of mapping:
+#Using multiple mappings for plots:
 magplot(temp[,1:2],col=hsv(h=magmap(temp[,4],stretch='log')$map),
 cex=magmap(temp[,3],lo=0.5,hi=1,range=c(1,6),type='num')$map)
+
+#Different combinations of mapping options:
+magmap(c(-1,0.1,1,NA,0.3,3),lo=0,hi=2.5,type='num',stretch='lin',bad=0.5)$map
+magmap(c(-1,0.1,1,NA,0.3,3),lo=0.1,hi=0.9,type='quan',stretch='log',bad=0.8)$map
+magmap(c(-1,0.1,1,NA,0.3,3),lo=-1,hi=1,type='sig',stretch='asinh',bad=0,stretchscale=2)$map
+magmap(c(-1,0.1,1,NA,0.3,3),type='rank',stretch='atan',bad=NA,stretchscale=2)$map
+
+#Example showing using asinh to generate a different axis mapping:
+datastretch=cbind(runif(1e3),10^runif(1e3,0,4)-10^runif(1e3,0,4))
+#This isn't a very helpful view of the data
+magplot(datastretch[,1:2])
+#This only shows the positive half of the data:
+magplot(datastretch[,1:2],log='y')
+#We can do a better job by remapping using the asinh option in magmap:
+datastretch=cbind(datastretch,magmap(datastretch[,2],lo=-1e4,hi=1e4,range=c(0,1),
+type='num',stretch='asinh')$map)
+asinhticks=magmap(c(-10^(4:0),0,10^(0:4)),lo=-1e4,hi=1e4,range=c(0,1),type='num',
+stretch='asinh')$map
+magplot(datastretch[,1],datastretch[,3],side=1)
+axis(2,asinhticks,labels=c(-10^(4:0),0,10^(0:4)))
+abline(h=magmap(0,lo=-1e4,hi=1e4,range=c(0,1),type='num',stretch='asinh')$map)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
