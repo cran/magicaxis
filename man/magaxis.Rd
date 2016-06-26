@@ -8,9 +8,10 @@ Magically pretty axes
 This function generates nicely arranged axes for scientific plots, including minor tick marks. It supports log settings and can unclog axes that have been logged inline by the user. When the dynamic range is 50 or less and axis is logged, axis range factors of 10 times 1, 2 and 5 are used instead of powers of 10 alone.
 }
 \usage{
-magaxis(side=1:2, majorn=5, minorn=5, tcl=0.5, ratio=0.5, labels=TRUE,
-unlog='Auto', mgp=c(2,0.5,0), mtline=2, xlab=NULL, ylab=NULL, crunch=TRUE, logpretty=TRUE,
-prettybase=10, hersh=FALSE, family='sans', frame.plot=FALSE, usepar=FALSE, ...)
+magaxis(side=1:2, majorn=5, minorn='auto', tcl=0.5, ratio=0.5, labels=TRUE,
+unlog='auto', mgp=c(2,0.5,0), mtline=2, xlab=NULL, ylab=NULL, crunch=TRUE, logpretty=TRUE,
+prettybase=10, powbase=10, hersh=FALSE, family='sans', frame.plot=FALSE, usepar=FALSE,
+grid=FALSE, grid.col='grey', grid.lty=1, grid.lwd=1, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,7 +22,7 @@ The side to be used for axis labelling in the same sense as the base axis functi
 The target number of major-axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
 }
   \item{minorn}{
-The target number of minor-axis sub-divisions for pretty plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. Obvious reason for varying this is different pretty labelling between a and y axes.
+The exact number of minor-axis divisions (i.e. desired minor ticks + 1) to display in plotting. Auto will produce \code{\link{pretty}} ticks for linear scaling, and powbase-2 minor ticks for logged (this might seem odd, but for base 10 this means ticks at 2/3/4/5/6/7/8/9, which is probably as desired). If set manually, must be greater than 1 to have a visible effect. Minor ticks are always calculated to be equally spaced in linear space, so tick spaces vary when using log plotting. If length is 1 and length of side is longer than this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. An obvious reason for varying this is different pretty labelling between x and y axes.
 }
   \item{tcl}{
 The length of major tick marks as a fraction of the height of a line of text. By default these face into the plot (in common with scientific plotting) with a value of 0.5, rather than the R default of -0.5. It is possible to force magaxis to inherit directly from par by setting usepar=TRUE (see below). See \code{\link{par}} for more details.
@@ -48,13 +49,16 @@ x axis name.
 y axis name.
 }
   \item{crunch}{
-In cases where the scientific text would be written as 1x10^8, should the 1x be removed so it reads 10^8. TRUE by default. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side.
+In cases where the scientific text would be written as 1x10^8, should the 1x be removed so it reads 10^8. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. TRUE by default.
 }
   \item{logpretty}{
 Should the major-ticks only be located at powers of 10. This changes cases where ticks are placed at 1, 3.1, 10, 31, 100 etc to 1, 10, 100. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. TRUE by default.
 }
   \item{prettybase}{
 The unit of repitition desired. By default it is 10, implying a pretty plot is one with marks at 10, 20, 30 etc. If you are plotting degrees then it might be prettier to display 90, 180, 270 etc. In which case prettybase should be set to 90. If log=TRUE then the reference location of 10 is changed, so in the previous example the labels generated would be at 9, 90, 900 etc rather than the deafult of 1, 10, 100 etc. If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side.
+}
+  \item{powbase}{
+Set the base to use for logarithmic axes. Default is to use 10.
 }
   \item{hersh}{
 To determines whether all plot text should be passed using Hershey vector fonts. This applies to the axis labels (which are handled automatically) and the axis names. In the case of axis names the user must be careful to use the correct plot utils escape characters: http://www.gnu.org/software/plotutils/manual/en/html_node/Text-String-Format.html.
@@ -68,6 +72,18 @@ Logical indicating whether a box should be drawn around the plot.
 }
   \item{usepar}{
 Logical indicating whether tcl and mgp should be forced to inherit the global par values. This might be preferred when you want to define global plot settings at the start of a script.
+}
+  \item{grid}{
+Logical indicating whether a background grid should be drawn onto the plotting area. This will only be done for side=1 (i.e. vertical grid lines) and side=2 (i.e. horizontal grid lines). If length is 1 and length of side is longer then this value is used for all axes. If length of arguments is longer than 1 then these should tally with the relevant axes in side. FALSE by default.
+}
+  \item{grid.col}{
+The colour of the grid to be drawn.
+}
+  \item{grid.lty}{
+The line type of the grid to be drawn.
+}
+  \item{grid.lwd}{
+The line width of the grid to be drawn.
 }
   \item{\dots}{
 Other arguments to be passed to base axis function.

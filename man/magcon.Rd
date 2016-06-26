@@ -17,7 +17,7 @@ weights=NA,...)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-x values to contour.
+x values to contour. If x is a two (or more) column matrix or data.frame and y is missing as an argument, then the first column is used for x and the second column for y.
 }
   \item{y}{
 y values to contour.
@@ -50,7 +50,7 @@ Label for y-axis, only used if add=FALSE.
 The colour palette to use for the image (this is also sent to magbar).
 }
   \item{conlevels}{
-Specific quantile contours to add. Default is for 50%, 68% and 95% contours, i.e. these contours contain that perecentage of the data.
+Specific quantile contours to add. Default is for 50\%, 68\% and 95\% contours, i.e. these contours contain that perecentage of the data.
 }
   \item{barposition}{
 The position to use for magbar. See magbar help for more details.
