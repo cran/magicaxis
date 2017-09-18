@@ -1,19 +1,14 @@
 maghist=function(x, breaks = "Sturges", freq = TRUE, include.lowest = TRUE, right = TRUE,
                 density = NULL, angle = 45, col = NULL, border = NULL, xlim = NULL,
-                ylim = NULL, plot = TRUE, verbose=TRUE, add=FALSE, log='', ...){
+                ylim = NULL, plot = TRUE, verbose=TRUE, add=FALSE, log='', scale=1, cumsum=FALSE, ...){
   
   if(!class(x)=='histogram'){
-    if(!missing(xlim)){
+    if(!is.null(xlim)){
       if(length(xlim)==1){
         sel= !is.na(x) & !is.nan(x) & !is.null(x) & is.finite(x)
         if (log[1] == "x" | log[1] == "xy" | log[1] == "yx") {
           sel= sel & x>0
         }
-        # if(xlim=='auto'){
-        #   xlim=magclip(x[sel])$range
-        # }else{
-        #   xlim=quantile(x[sel],pnorm(c(-xlim,xlim)),na.rm = TRUE)
-        # }
         xlim=magclip(x[sel], sigma=xlim)$range
       }
       sel=x>=xlim[1] & x<=xlim[2] & !is.na(x) & !is.nan(x) & !is.null(x) & is.finite(x)
@@ -26,10 +21,14 @@ maghist=function(x, breaks = "Sturges", freq = TRUE, include.lowest = TRUE, righ
       }
     }
     
-    xtemp=x[sel]
     if (log[1] == "x" | log[1] == "xy" | log[1] == "yx"){
+      sel= sel & x>0
+      xtemp=x[sel]
       xtemp=log10(xtemp)
+    }else{
+      xtemp=x[sel]
     }
+    
     outsum=summary(xtemp)
     sd1q2q=c(as.numeric(sd(xtemp)), as.numeric(diff(quantile(xtemp,pnorm(c(-1,1)),na.rm = TRUE)))/2, as.numeric(diff(quantile(xtemp,pnorm(c(-2,2)),na.rm = TRUE)))/2)
     
@@ -58,7 +57,17 @@ maghist=function(x, breaks = "Sturges", freq = TRUE, include.lowest = TRUE, righ
     }
   }
   
-  if(missing(xlim)){
+  out$counts[is.na(out$counts)]=0
+  out$density[is.na(out$density)]=0
+  
+  out$counts=out$counts*scale
+  
+  if(cumsum){
+    out$counts=cumsum(out$counts)
+    out$density=cumsum(out$density)
+  }
+  
+  if(is.null(xlim)){
     xlim=range(out$breaks)
   }else{
     if (log[1] == "x" | log[1] == "xy" | log[1] == "yx"){
@@ -72,9 +81,13 @@ maghist=function(x, breaks = "Sturges", freq = TRUE, include.lowest = TRUE, righ
     out$density[is.infinite(out$density)]=NA
   }
   
-  if(missing(ylim)){
+  if(is.null(ylim)){
     if(freq){
-      ylim=c(0,max(out$counts,na.rm = TRUE))
+      if(log[1] == "y" | log[1] == "xy" | log[1] == "yx"){
+        ylim=c(min(out$counts,na.rm = TRUE),max(out$counts,na.rm = TRUE))
+      }else{
+        ylim=c(0,max(out$counts,na.rm = TRUE))
+      }
     }else{
       if(log[1] == "y" | log[1] == "xy" | log[1] == "yx"){
         ylim=c(min(out$density,na.rm = TRUE),max(out$density,na.rm = TRUE))
