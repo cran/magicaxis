@@ -1,7 +1,7 @@
 magaxis <-
 function(side=1:2, majorn=5, minorn='auto', tcl=0.5, ratio=0.5, labels=TRUE, unlog='auto', mgp=c(2,0.5,0), mtline=2, xlab=NULL, ylab=NULL, crunch=TRUE, logpretty=TRUE, prettybase=10, powbase=10, hersh=FALSE, family='sans', frame.plot=FALSE, usepar=FALSE, grid=FALSE, grid.col='grey', grid.lty=1, grid.lwd=1, ...){
 dots=list(...)
-dotskeepaxis=c('cex.axis', 'col.axis', 'font.axis', 'xaxp', 'yaxp', 'tck', 'las', 'fg', 'xpd', 'xaxt', 'yaxt', 'col.ticks', 'lwd.ticks', 'tick')
+dotskeepaxis=c('cex.axis', 'col.axis', 'font.axis', 'xaxp', 'yaxp', 'tck', 'las', 'fg', 'xpd', 'xaxt', 'yaxt', 'col.ticks', 'tick')
 dotskeepmtext=c('cex.lab', 'col.lab', 'font.lab')
 if(length(dots)>0){
   dotsaxis=dots[names(dots) %in% dotskeepaxis]
@@ -10,10 +10,11 @@ if(length(dots)>0){
   dotsaxis={}
   dotsmtext={}
 }
+if(length(mtline)==1){mtline=rep(mtline,2)}
 majornlist=majorn
 minornlist=minorn
-unloglist=unlog
 labelslist=labels
+unloglist=unlog
 crunchlist=crunch
 logprettylist=logpretty
 prettybaselist=prettybase
@@ -21,8 +22,8 @@ powbaselist=powbase
 gridlist=grid
 if(length(majorn)==1 & length(side)>1){majornlist=rep(majorn,length(side))}
 if(length(minorn)==1 & length(side)>1){minornlist=rep(minorn,length(side))}
-if(length(unlog)==1 & length(side)>1 & (unlog[1]==T | unlog[1]==F | unlog[1]=='auto')){unloglist=rep(unlog,length(side))}
 if(length(labels)==1 & length(side)>1){labelslist=rep(labels,length(side))}
+if(length(unlog)==1 & length(side)>1 & (unlog[1]==T | unlog[1]==F | unlog[1]=='auto')){unloglist=rep(unlog,length(side))}
 if(length(crunch)==1 & length(side)>1){crunchlist=rep(crunch,length(side))}
 if(length(logpretty)==1 & length(side)>1){logprettylist=rep(logpretty,length(side))}
 if(length(prettybase)==1 & length(side)>1){prettybaselist=rep(prettybase,length(side))}
@@ -35,8 +36,8 @@ if(unlog[1]=='xy' | unlog[1]=='yx'){unloglist=rep(TRUE,length(side))}
 
 if(length(majornlist) != length(side)){stop('Length of majorn vector mismatches number of axes!')}
 if(length(minornlist) != length(side)){stop('Length of minorn vector mismatches number of axes!')}
-if(length(unloglist) != length(side)){stop('Length of unlog vector mismatches number of axes!')}
 if(length(labelslist) != length(side)){stop('Length of labels vector mismatches number of axes!')}
+if(length(unloglist) != length(side)){stop('Length of unlog vector mismatches number of axes!')}
 if(length(crunchlist) != length(side)){stop('Length of crunch vector mismatches number of axes!')}
 if(length(logprettylist) != length(side)){stop('Length of logpretty vector mismatches number of axes!')}
 if(length(prettybaselist) != length(side)){stop('Length of prettybase vector mismatches number of axes!')}
@@ -49,6 +50,7 @@ if(hersh & family=='sans'){par(family='HersheySans')}
 if(hersh==F & family=='serif'){par(family='serif')}
 if(hersh==F & family=='sans'){par(family='sans')}
 
+lwd=par()$lwd
 if(usepar){
   tcl=par()$tcl
   mgp=par()$mgp
@@ -58,8 +60,8 @@ for(i in 1:length(side)){
 		currentside=side[i]
     majorn=majornlist[i]
     minorn=minornlist[i]
+    labels=labelslist[i]
 		unlog=unloglist[i]
-		labels=labelslist[i]
 		crunch=crunchlist[i]
 		logpretty=logprettylist[i]
     prettybase=prettybaselist[i]
@@ -87,7 +89,11 @@ for(i in 1:length(side)){
  		    }else{
  		       splitmin=minorn+1
  		    }
-        minors = log(seq(powbase^major.ticks[1],powbase^major.ticks[2],len=splitmin),powbase)-major.ticks[1]
+        if(splitmin>10){
+          minors = seq(major.ticks[1], major.ticks[2])-major.ticks[1]
+        }else{
+          minors = log(seq(powbase^major.ticks[1],powbase^major.ticks[2],len=splitmin),powbase)-major.ticks[1]
+        }
       }
  		}
  		if(logged & unlog==F){
@@ -101,7 +107,11 @@ for(i in 1:length(side)){
  		    }else{
  		       splitmin=minorn+1
  		    }
- 		    minors = log(seq(powbase^major.ticks[1],powbase^major.ticks[2],len=splitmin),powbase)-major.ticks[1]
+ 		    if(splitmin>10){
+          minors = seq(major.ticks[1], major.ticks[2])-major.ticks[1]
+        }else{
+          minors = log(seq(powbase^major.ticks[1],powbase^major.ticks[2],len=splitmin),powbase)-major.ticks[1]
+        }
  		  }
  		}
 
@@ -132,16 +142,16 @@ for(i in 1:length(side)){
     }
 
  		if(logged){
- 		  do.call("axis", c(list(side=currentside,at=powbase^major.ticks,tcl=tcl,labels=FALSE,mgp=mgp),dotsaxis))
+ 		  do.call("axis", c(list(side=currentside,at=powbase^major.ticks,tcl=tcl,labels=FALSE,mgp=mgp,lwd=lwd,lwd.ticks=lwd),dotsaxis))
  		}else{
- 		  do.call("axis", c(list(side=currentside,at=major.ticks,tcl=tcl,labels=FALSE,mgp=mgp),dotsaxis))
+ 		  do.call("axis", c(list(side=currentside,at=major.ticks,tcl=tcl,labels=FALSE,mgp=mgp,lwd=lwd,lwd.ticks=lwd),dotsaxis))
  		}
  		
     if(labels){
       if(logged){
-        do.call("axis", c(list(side=currentside,at=powbase^labloc,tick=F,labels=uselabels,mgp=mgp),dotsaxis))
+        do.call("axis", c(list(side=currentside,at=powbase^labloc,tick=F,labels=uselabels,mgp=mgp,lwd=lwd,lwd.ticks=lwd),dotsaxis))
       }else{
-        do.call("axis", c(list(side=currentside,at=labloc,tick=F,labels=uselabels,mgp=mgp),dotsaxis))
+        do.call("axis", c(list(side=currentside,at=labloc,tick=F,labels=uselabels,mgp=mgp,lwd=lwd,lwd.ticks=lwd),dotsaxis))
       }
     }
     
@@ -149,9 +159,9 @@ for(i in 1:length(side)){
       minors = minors[-c(1,length(minors))]
       minor.ticks = c(outer(minors, major.ticks, `+`))
       if(logged){
-        do.call("axis", c(list(side=currentside,at=powbase^minor.ticks,tcl=tcl*ratio,labels=FALSE,mgp=mgp),dotsaxis))
+        do.call("axis", c(list(side=currentside,at=powbase^minor.ticks,tcl=tcl*ratio,labels=FALSE,mgp=mgp,lwd=lwd,lwd.ticks=lwd),dotsaxis))
       }else{
-        do.call("axis", c(list(side=currentside,at=minor.ticks,tcl=tcl*ratio,labels=FALSE,mgp=mgp),dotsaxis))
+        do.call("axis", c(list(side=currentside,at=minor.ticks,tcl=tcl*ratio,labels=FALSE,mgp=mgp,lwd=lwd,lwd.ticks=lwd),dotsaxis))
       }
     }
   }
@@ -159,13 +169,11 @@ for(i in 1:length(side)){
   if(length(dotsmtext)>0){
     names(dotsmtext)=c('cex', 'col', 'font')[match(names(dotsmtext), dotskeepmtext)]
   }
-  if(is.null(xlab)==F){
-    do.call("mtext", c(list(text=xlab, side=1, line=mtline), dotsmtext))
-    #mtext(xlab,1,line=mtline,cex=par()$cex.lab)
+  if(is.null(xlab)==FALSE){
+    do.call("mtext", c(list(text=xlab, side=ifelse(side[1] %in% c(1,3), side[1], side[2]), line=mtline[1]), dotsmtext))
   }
-  if(is.null(ylab)==F){
-    do.call("mtext", c(list(text=ylab, side=2, line=mtline), dotsmtext))
-    #mtext(ylab,2,line=mtline,cex=par()$cex.lab)
+  if(is.null(ylab)==FALSE){
+    do.call("mtext", c(list(text=ylab, side=ifelse(side[2] %in% c(2,4), side[2], side[1]), line=mtline[2]), dotsmtext))
   }
 
 if(frame.plot){box()}

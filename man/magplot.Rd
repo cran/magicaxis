@@ -10,9 +10,9 @@ Makes scientific plots based on magaxis axes. Particularly designed for log plot
 \usage{
 magplot(x, y, log = "", main = "", side = 1:2, majorn = 5, minorn = 'auto', tcl = 0.5,
 ratio = 0.5, labels = TRUE, unlog = "auto", mgp = c(2,0.5,0), mtline = 2, xlab = '',
-ylab = '', crunch = TRUE, logpretty = TRUE, prettybase = 10, powbase=10, hersh = FALSE,
-family = "sans", frame.plot = TRUE, usepar=FALSE, grid=FALSE, grid.col='grey',
-grid.lty=1, grid.lwd=1, axes=TRUE, xlim=NULL, ylim=NULL, ...) 
+ylab = '', crunch = TRUE, logpretty = TRUE, prettybase = 10, powbase = 10, hersh = FALSE,
+family = "sans", frame.plot = TRUE, usepar = FALSE, grid = FALSE, grid.col = 'grey',
+grid.lty = 1, grid.lwd = 1, axes = TRUE, xlim = NULL, ylim = NULL, ...) 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,7 +54,7 @@ Determines if axis labels should be unlogged. If axis is found to be logged in p
 The margin line (in mex units) for the axis title, axis labels and axis line. This has different (i.e. prettier) defaults than R of c(2,0.5,0) rather than c(3,1,0). This pushes the numbers and labels nearer to the plot compared to the defaults. It is possible to force magaxis to inherit directly from par by setting usepar=TRUE (see below). See \code{\link{par}} for more details.
 }
   \item{mtline}{
-Number of lines separating axis name from axis.
+Number of lines separating axis name from axis. If length 2 then specifies x and y axis separation respectively (else these are the same).
 }
   \item{xlab}{
 x axis name.

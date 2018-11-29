@@ -15,29 +15,32 @@ These functions add various WCS information to R images. It is particularly desi
 magimageWCS(image, header, n, grid.col = "grey", grid.lty = 2, grid.lwd = 0.5,
 lab.col = "green", coord.type = "sex", margin = TRUE, loc.diff = c(0, 0),
 xlab = "Right Ascension", ylab = "Declination", mgp = c(2, 0.5, 0), mtline = 2,
-position = "topright", com.col = "green", com.length = 0.05, coord.axis='auto',
-pretty= 'auto', CRVAL1 = 0, CRVAL2 = 0, CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0,
-CD2_1 = 0, CD2_2 = 1, ...)
+position = "topright", com.col = "green", com.length = 0.05, coord.axis = 'auto',
+pretty = 'auto', CRVAL1 = 0, CRVAL2 = 0, CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0,
+CD2_1 = 0, CD2_2 = 1, CTYPE1 = 'RA--TAN', CTYPE2 = 'DEC--TAN', ...)
 
-magimageWCSRGB(R, G, B, header_out, Rheader, Gheader, Bheader, direction = "auto",
-boundary = "dirichlet", interpolation = "cubic", n, grid.col='grey', grid.lty=2,
-grid.lwd=0.5, lab.col='green', coord.type='sex', margin=TRUE, loc.diff=c(0,0),
+magimageWCSRGB(R, G, B, header_out, Rheader, Gheader, Bheader, dowarp='auto',
+direction = "auto", boundary = "dirichlet", interpolation = "cubic", n, grid.col='grey',
+grid.lty=2, grid.lwd=0.5, lab.col='green', coord.type='sex', margin=TRUE, loc.diff=c(0,0),
 xlab='Right Ascension', ylab='Declination', mgp=c(2,0.5,0), mtline=2, position='topright',
 com.col="green", com.length=0.05, coord.axis='auto', pretty='auto', CRVAL1=0, CRVAL2=0,
-CRPIX1=0, CRPIX2=0, CD1_1=1, CD1_2=0, CD2_1=0, CD2_2=1, ...)
+CRPIX1=0, CRPIX2=0, CD1_1=1, CD1_2=0, CD2_1=0, CD2_2=1, CTYPE1 = 'RA--TAN',
+CTYPE2 = 'DEC--TAN', ...)
 
 magimageWCSGrid(header, n, grid.col = "grey", grid.lty = 1, grid.lwd = 1,
 coord.type = "sex", loc.diff = c(0, 0), pretty= 'auto', CRVAL1 = 0, CRVAL2 = 0,
-CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, ...)
+CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, CTYPE1 = 'RA--TAN',
+CTYPE2 = 'DEC--TAN', ...)
 
 magimageWCSLabels(header, n, lab.col = "green", coord.type = "sex", margin = TRUE,
 loc.diff = c(0, 0), xlab = "Right Ascension", ylab = "Declination", mgp = c(2, 0.5, 0),
 mtline = 2, coord.axis='auto', pretty= 'auto', CRVAL1 = 0, CRVAL2 = 0, CRPIX1 = 0,
-CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, ...)
+CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, CTYPE1 = 'RA--TAN',
+CTYPE2 = 'DEC--TAN', ...)
 
 magimageWCSCompass(header, position = "topright", com.col = "green", com.length = 0.05, 
 loc.diff = c(0, 0), CRVAL1 = 0, CRVAL2 = 0, CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0,
-CD2_1 = 0, CD2_2 = 1, ...)
+CD2_1 = 0, CD2_2 = 1, CTYPE1 = 'RA--TAN', CTYPE2 = 'DEC--TAN', ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -67,6 +70,9 @@ Full \option{G} FITS header in table or vector format. It is usually easier to i
 }
   \item{Bheader}{
 Full \option{B} FITS header in table or vector format. It is usually easier to include the header with the \option{B} list input as described above.
+}
+  \item{dowarp}{
+Image warping flag, either TRUE, FALSE or 'auto' (default). If TRUE then the images will be warped onto the \option{header_out} WCS scheme, if FALSE they will not be (which will break if the WCSs are not truly the same and the iamges are pixel matched). 'auto' tries to detect if the headers are all the same, and if they are then it will set \option{dowarp}=FALSE, otherwise it will set to TRUE. This can be fooled by small (and unimportant) differences in the headers, e.g. they have different SWarp dates etc, since it just checks if the text differs anywhere.
 }
   \item{direction}{
 Only used if re-mapping via \code{\link{magwarp}}. "auto" (default), "forward" or "backward", see \code{imwarp}. Since it is usally better to go from the higher resolution image and map this onto the lower resolution grid, "auto" selects the better direction given the pixel scales recovered from the header information.
@@ -129,28 +135,34 @@ Colour of the compass.
 Length of the edges of the arrow head.
 }
   \item{CRVAL1}{
-FITS header CRVAL1 for the Tan Gnomonic projection system. This is the RA in degrees at the location of \option{CRPIX1}.
+FITS header CRVAL1 for the \option{CTYPE1} projection system. This is the RA in degrees at the location of \option{CRPIX1}.
 }
   \item{CRVAL2}{
-FITS header CRVAL2 for the Tan Gnomonic projection system. This is the Dec in degrees at the location of \option{CRPIX2}.
+FITS header CRVAL2 for the \option{CTYPE2} projection system. This is the Dec in degrees at the location of \option{CRPIX2}.
 }
   \item{CRPIX1}{
-FITS header CRPIX1 for the Tan Gnomonic projection system. This is the x pixel value at the location of \option{CRVAL1}.
+FITS header CRPIX1 for the \option{CTYPE1} projection system. This is the x pixel value at the location of \option{CRVAL1}.
 }
   \item{CRPIX2}{
-FITS header CRPIX2 for the Tan Gnomonic projection system. This is the y pixel value at the location of \option{CRVAL2}.
+FITS header CRPIX2 for the \option{CTYPE2} projection system. This is the y pixel value at the location of \option{CRVAL2}.
 }
   \item{CD1_1}{
-FITS header CD1_1 for the Tan Gnomonic projection system. Change in RA-Tan in degrees along x-Axis.
+FITS header CD1_1 for the \option{CTYPE1} projection system. Change in \option{CTYPE1} in degrees along x-Axis.
 }
   \item{CD1_2}{
-FITS header CD1_2 for the Tan Gnomonic projection system. Change in RA-Tan in degrees along y-Axis.
+FITS header CD1_2 for the \option{CTYPE1} projection system. Change in \option{CTYPE1} in degrees along y-Axis.
 }
   \item{CD2_1}{
-FITS header CD2_1 for the Tan Gnomonic projection system. Change in Dec-Tan in degrees along x-Axis.
+FITS header CD2_1 for the \option{CTYPE2} projection system. Change in \option{CTYPE2} in degrees along x-Axis.
 }
   \item{CD2_2}{
-FITS header CD2_2 for the Tan Gnomonic projection system. Change in Dec-Tan in degrees along y-Axis.
+FITS header CD2_2 for the \option{CTYPE2} projection system. Change in \option{CTYPE2} in degrees along y-Axis.
+}
+  \item{CTYPE1}{
+The RA projection system type. Either 'RA--TAN' for Tan Gnomonic (default), or 'RA--SIN' for Sine Orthographic. 'RA--NCP' is approximated by Sine Orthographic with a warning. Over-ridden by the FITS header.  
+}
+  \item{CTYPE2}{
+The DEC projection system type. Either 'DEC--TAN' for Tan Gnomonic (default), or 'DEC--SIN' for Sine Orthographic. 'DEC--NCP' is approximated by Sine Orthographic with a warning. Over-ridden by the FITS header.  
 }
   \item{\dots}{
 These are parsed to \code{\link{magimage}}, (\code{magimageWCS}), \code{\link{magimageRGB}}, (\code{magimageWCSRGB}), \code{\link{lines}} (\code{magimageWCSGrid}), \code{\link{axis}} (\code{magimageWCSLabels}) or \code{\link{arrows}} (\code{magimageWCSCompass}).
@@ -173,11 +185,11 @@ For convenience users can use the header outputs produced by both the \code{read
 By R convention the bottom-left part of the bottom-left pixel when plotting the image matrix is c(0,0) and the top-right part of the bottom-left pixel is c(1,1), i.e. the mid-point of pixels are half integer values in x and y. This differs to the FITS convention of pixel mid points being integer values. As such the R [x,y] = FITS [x-0.5,y-0.5]. This rarely matters too much in practice, but for accurate overlays you will want to get it right.
 }
 \seealso{
-\code{\link{radec2xy}}, \code{\link{xy2radec}}, \code{\link{magcutoutWCS}}
+\code{\link{magimage}}, \code{\link{magcutoutWCS}}, \code{\link{radec2xy}}, \code{\link{xy2radec}}
 }
 \examples{
 \dontrun{
-image=readFITS(system.file("extdata", 'VIKING/mystery_VIKING_Z.fits', package="ProFit"))
+image=readFITS(system.file("extdata", 'VIKING/mystery_VIKING_Z.fits', package="ProFound"))
 
 #Convenient image plotting for lists containing headers:
 
@@ -204,6 +216,13 @@ GALEX_NUV=readFITS(system.file("extdata", 'GALEX_NUV.fits', package="magicaxis")
 
 magimageWCSRGB(VISTA_K, VST_r, GALEX_NUV)
 magimageWCSRGB(VISTA_K, VST_r, GALEX_NUV, saturation=0.5)
+
+#To make direct magimageRGB plots of the outputs you must turn off magmap scaling:
+
+temp=magimageWCSRGB(VISTA_K, VST_r, GALEX_NUV)
+magimageRGB(R=temp$R, G=temp$G, B=temp$B, magmap=FALSE)
+
+#We can map onto various WCS schemes easily too:
 
 magimageWCSRGB(VISTA_K, VST_r, GALEX_NUV, VISTA_K$hdr)
 magimageWCSRGB(VISTA_K, VST_r, GALEX_NUV, VST_r$hdr)

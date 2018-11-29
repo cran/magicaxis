@@ -15,11 +15,14 @@ magcutout(image, loc = dim(image)/2, box = c(100, 100), shiftloc = FALSE, paddim
 plot = FALSE, ...)
 magcutoutWCS(image, header, loc, box = c(100, 100), shiftloc = FALSE, paddim = TRUE,
 plot = FALSE, CRVAL1 = 0, CRVAL2 = 0, CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1, CD1_2 = 0,
-CD2_1 = 0, CD2_2 = 1, coord.type = "deg", sep = ":", loc.type=c('coord','coord'), ...)
+CD2_1 = 0, CD2_2 = 1, coord.type = "deg", sep = ":", loc.type=c('coord','coord'),
+approx.map = FALSE, ...)
 magWCSradec2xy(RA, Dec, header, CRVAL1 = 0, CRVAL2 = 0, CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1,
-CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, loc.diff = c(0, 0), coord.type = "deg", sep = ":")
+CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, CTYPE1 = 'RA--TAN', CTYPE2 = 'DEC--TAN',
+loc.diff = c(0, 0), coord.type = "deg", sep = ":")
 magWCSxy2radec(x, y, header, CRVAL1 = 0, CRVAL2 = 0, CRPIX1 = 0, CRPIX2 = 0, CD1_1 = 1,
-CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, loc.diff = c(0, 0))
+CD1_2 = 0, CD2_1 = 0, CD2_2 = 1, CTYPE1 = 'RA--TAN', CTYPE2 = 'DEC--TAN',
+loc.diff = c(0, 0))
 }
 \arguments{
   \item{image}{
@@ -32,7 +35,7 @@ Full FITS header in table or vector format. Legal table format headers are provi
 Numeric vector; the [x,y] (\code{magcutout}) or [x,y] / [RA,Dec] (\code{magcutoutWCS}) location where we want to cutout the image. For \code{magcutoutWCS} the unit type can be specified with the \option{loc.type} option. Either it is WCS in degrees [RA,Dec] (coord) or  pixel [x,y] of the \option{image} (image).
 }
   \item{box}{
-Numeric vector; the dimensions of the box in pixels (\code{magcutout}) or pixels/asec (\code{magcutoutWCS}) to cut out from \option{image} centred on \option{loc}.
+Numeric vector; the dimensions of the box to cut out from \option{image} centred on \option{loc}. For \code{magcutout} the \option{box} unit is always pixels. For \code{magcutoutWCS} the unit type can be specified with the \option{loc.type} option. Either it is pixels or asec (see \option{loc.type}). 
 }
   \item{RA}{
 Vector or matrix; target right ascension in degrees. If matrix then the first column will be used as \option{RA} and the second column as \option{Dec}.  
@@ -59,28 +62,34 @@ Logical; should the cutout be padded with \option{image} data until it meets the
 Logical; should a \code{\link{magimage}} (\code{magcutout}) or \code{\link{magimageWCS}} (\code{magcutoutWCS}) plot of the output be generated?
 }
   \item{CRVAL1}{
-FITS header CRVAL1 for the Tan Gnomonic projection system. This is the RA in degrees at the location of \option{CRPIX1}.
+FITS header CRVAL1 for the \option{CTYPE1} projection system. This is the RA in degrees at the location of \option{CRPIX1}.
 }
   \item{CRVAL2}{
-FITS header CRVAL2 for the Tan Gnomonic projection system. This is the Dec in degrees at the location of \option{CRPIX2}.
+FITS header CRVAL2 for the \option{CTYPE2} projection system. This is the Dec in degrees at the location of \option{CRPIX2}.
 }
   \item{CRPIX1}{
-FITS header CRPIX1 for the Tan Gnomonic projection system. This is the x pixel value at the location of \option{CRVAL1}.
+FITS header CRPIX1 for the \option{CTYPE1} projection system. This is the x pixel value at the location of \option{CRVAL1}.
 }
   \item{CRPIX2}{
-FITS header CRPIX2 for the Tan Gnomonic projection system. This is the y pixel value at the location of \option{CRVAL2}.
+FITS header CRPIX2 for the \option{CTYPE2} projection system. This is the y pixel value at the location of \option{CRVAL2}.
 }
   \item{CD1_1}{
-FITS header CD1_1 for the Tan Gnomonic projection system. Change in RA-Tan in degrees along x-Axis.
+FITS header CD1_1 for the \option{CTYPE1} projection system. Change in \option{CTYPE1} in degrees along x-Axis.
 }
   \item{CD1_2}{
-FITS header CD1_2 for the Tan Gnomonic projection system. Change in RA-Tan in degrees along y-Axis.
+FITS header CD1_2 for the \option{CTYPE1} projection system. Change in \option{CTYPE1} in degrees along y-Axis.
 }
   \item{CD2_1}{
-FITS header CD2_1 for the Tan Gnomonic projection system. Change in Dec-Tan in degrees along x-Axis.
+FITS header CD2_1 for the \option{CTYPE2} projection system. Change in \option{CTYPE2} in degrees along x-Axis.
 }
   \item{CD2_2}{
-FITS header CD2_2 for the Tan Gnomonic projection system. Change in Dec-Tan in degrees along y-Axis.
+FITS header CD2_2 for the \option{CTYPE2} projection system. Change in \option{CTYPE2} in degrees along y-Axis.
+}
+  \item{CTYPE1}{
+The RA projection system type. Either 'RA--TAN' for Tan Gnomonic (default), or 'RA--SIN' for Sine Orthographic. 'RA--NCP' is approximated by Sine Orthographic with a warning. Over-ridden by the FITS header.  
+}
+  \item{CTYPE2}{
+The DEC projection system type. Either 'DEC--TAN' for Tan Gnomonic (default), or 'DEC--SIN' for Sine Orthographic. 'DEC--NCP' is approximated by Sine Orthographic with a warning. Over-ridden by the FITS header.  
 }
   \item{coord.type}{
 The units of \option{loc} for \code{magcutoutWCS}. Allowed options are 'deg' for degress and 'sex' for sexigesimal (i.e. HMS for RA and DMS for Deg).
@@ -89,7 +98,10 @@ The units of \option{loc} for \code{magcutoutWCS}. Allowed options are 'deg' for
 When \option{coord.type}='sex', \option{sep} defines the type of separator used for the HMS and DMS strings (i.e. H:M:S and D:M:S would be sep=':', which is the default). See \code{\link{hms2deg}} and  \code{\link{dms2deg}} for more details.
 }
   \item{loc.type}{
-Character vector; specifies what type of location is being provided. The first element specifies the coordinate type for \option{loc} and the second element is the coordinate type for \option{box}. Either it is WCS in degrees [RA,Dec] / asec ('coord') or  pixel [x,y] of the \option{image} ('image').  
+Character vector; specifies what type of location is being provided. The first element specifies the coordinate type for \option{loc} and the second element is the coordinate type for \option{box}. Either it is WCS in degrees [RA,Dec] / asec ('coord') or  pixel [x,y] of the \option{image} ('image'). If only one element is provided then the same coordinate type is used for both \option{loc} and \option{box}.
+}
+\item{approx.map}{
+Logical; should an approximate coordinate mapping scheme be computed? This should be left as the default FALSE if saving the cut down object, and only TRUE if you are experimenting with the image cutouts within the same R session.
 }
   \item{\dots}{
 Dots are parsed to either \code{\link{magimage}} (\code{magcutout}) or \code{\link{magimageWCS}} (\code{magcutoutWCS}).
@@ -146,7 +158,7 @@ print(magcutout(temp, dim(temp)/2, box=c(3,3))$loc)
 
 # A simple WCS cutout example:
 
-image=readFITS(system.file("extdata", 'VIKING/mystery_VIKING_Z.fits', package="ProFit"))
+image=readFITS(system.file("extdata", 'VIKING/mystery_VIKING_Z.fits', package="ProFound"))
 
 par(mar=c(3.1,3.1,1.1,1.1))
 magcutout(image$imDat, loc=c(50.5,50.5), plot=TRUE)
@@ -164,7 +176,8 @@ plot=TRUE)$loc.WCS
 
 #We can add RA Dec specific decorations easily:
 
-cutim=magcutoutWCS(image, loc=c(352.2918, -31.82652), box=c(30,30), plot=TRUE)
+cutim=magcutoutWCS(image, loc=c(352.2918, -31.82652), box=c(30,30), plot=TRUE,
+approx.map=TRUE)
 
 #Approx overlays:
 
@@ -179,7 +192,7 @@ col='red')
 
 magimageWCS(cutim)
 
-# Now test the various cutout size options by asking for a large cutout near the image boundary
+# Now test the various cutout size options for a large cutout near the image boundary
 
 loc = c(300,340)
 box = c(200,200)
@@ -198,21 +211,21 @@ cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.typ
 # Setting paddim=FALSE returns the largest possible cutout within the image bounds,
 # without shifting the centre:
 
-cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type, plot=TRUE,
-	shiftloc=FALSE, paddim=FALSE)
+cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
+  plot=TRUE, shiftloc=FALSE, paddim=FALSE)
 
 # Setting paddim=FALSE and shiftloc=TRUE returns a larger cutout, but with at most
 # box/2 padding on either side:
 
-cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type, plot=TRUE,
-	shiftloc=TRUE, paddim=FALSE)
+cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
+  plot=TRUE, shiftloc=TRUE, paddim=FALSE)
 
-# Setting shiftloc=FALSE and requesting a box size larger than the image returns a cutout with the
-# requested box size:
+# Setting shiftloc=FALSE and requesting a box size larger than the image returns a cutout
+# with the requested box size:
 
 box = c(400,400)
-cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type, plot=TRUE,
-	shiftloc=FALSE, paddim=TRUE)
+cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
+plot=TRUE, shiftloc=FALSE, paddim=TRUE)
 
 }
 }

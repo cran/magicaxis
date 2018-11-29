@@ -1,4 +1,11 @@
-magimageRGB<-function(x, y, R, G, B, saturation=1, zlim, xlim, ylim, add = FALSE, useRaster=TRUE, asp=1, magmap=TRUE, locut=0.4, hicut=0.995, flip=FALSE, range=c(0,1), type = "quan", stretch="asinh", stretchscale='auto', bad=range[1], clip="", axes=TRUE, frame.plot=TRUE, sparse='auto', ...) {
+magimageRGB<-function(x, y, R, G, B, saturation=1, zlim, xlim, ylim, add = FALSE, useRaster=TRUE, asp=1, magmap=TRUE, locut=0.4, hicut=0.995, flip=FALSE, range=c(0,1), type = "quan", stretch="asinh", stretchscale='auto', bad=range[1], clip="", axes=TRUE, frame.plot=TRUE, sparse='auto', ...){
+  dots=list(...)
+  dotskeepimage=c('xaxs', 'yaxs', 'breaks', 'oldstyle')
+  if(length(dots)>0){
+    dotsimage=dots[names(dots) %in% dotskeepimage]
+  }else{
+    dotsimage={}
+  }
   if(!missing(x)){
     if(is.list(x)){
       if('y' %in% names(x)){y=x$y}
@@ -47,6 +54,9 @@ magimageRGB<-function(x, y, R, G, B, saturation=1, zlim, xlim, ylim, add = FALSE
     G=G[samplex,sampley]
     B=B[samplex,sampley]
   }
+  if(missing(zlim)){
+    zlim=c(0,length(R))
+  }
   if(length(locut)<3){locut=rep(locut,3)}
   if(length(hicut)<3){hicut=rep(hicut,3)}
   if(magmap){
@@ -69,14 +79,14 @@ magimageRGB<-function(x, y, R, G, B, saturation=1, zlim, xlim, ylim, add = FALSE
     rm(Ba)
   }
   
-  R=R-min(R)
-  R=R/max(R)
-  G=G-min(G)
-  G=G/max(G)
-  B=B-min(B)
-  B=B/max(B)
+  # R=R-min(R)
+  # R=R/max(R)
+  # G=G-min(G)
+  # G=G/max(G)
+  # B=B-min(B)
+  # B=B/max(B)
   
-  image(x=x, y=y, z=matrix(1:length(R),dim(R)[1]), xlim=xlim, ylim=ylim, col=rgb(R,G,B), add=add, useRaster=useRaster, axes=FALSE, asp=asp, xlab='', ylab='', main='')
+  do.call('image',c(list(x=x, y=y, z=matrix(1:length(R),dim(R)[1]), zlim=zlim, xlim=xlim, ylim=ylim, col=rgb(R,G,B), add=add, useRaster=useRaster, axes=FALSE, asp=asp, xlab='', ylab='', main=''), dotsimage))
   if(add==FALSE){
     if(axes){
       magaxis(...)
@@ -86,7 +96,7 @@ magimageRGB<-function(x, y, R, G, B, saturation=1, zlim, xlim, ylim, add = FALSE
   return=list(x=x, y=y, R=R, G=G, B=B)
 }
 
-magimageWCSRGB=function(R, G, B, header_out, Rheader, Gheader, Bheader, direction = "auto", boundary = "dirichlet", interpolation = "cubic", n, grid.col='grey', grid.lty=2, grid.lwd=0.5, lab.col='green', coord.type='sex', margin=TRUE, loc.diff=c(0,0), xlab='Right Ascension', ylab='Declination', mgp=c(2,0.5,0), mtline=2, position='topright', com.col="green", com.length=0.05, coord.axis='auto', pretty='auto', CRVAL1=0, CRVAL2=0, CRPIX1=0, CRPIX2=0, CD1_1=1, CD1_2=0, CD2_1=0, CD2_2=1, ...){
+magimageWCSRGB=function(R, G, B, header_out, Rheader, Gheader, Bheader, dowarp='auto', direction = "auto", boundary = "dirichlet", interpolation = "cubic", n, grid.col='grey', grid.lty=2, grid.lwd=0.5, lab.col='green', coord.type='sex', margin=TRUE, loc.diff=c(0,0), xlab='Right Ascension', ylab='Declination', mgp=c(2,0.5,0), mtline=2, position='topright', com.col="green", com.length=0.05, coord.axis='auto', pretty='auto', CRVAL1=0, CRVAL2=0, CRPIX1=0, CRPIX2=0, CD1_1=1, CD1_2=0, CD2_1=0, CD2_2=1, CTYPE1='RA--TAN', CTYPE2='DEC--TAN', ...){
   
   if(missing(xlab)){
     if(coord.type=='sex'){
@@ -181,11 +191,13 @@ magimageWCSRGB=function(R, G, B, header_out, Rheader, Gheader, Bheader, directio
     }
   }
   
-  dowarp=FALSE
-  if(all(dim(R)==dim(G))==FALSE){dowarp=TRUE}
-  if(all(dim(R)==dim(B))==FALSE){dowarp=TRUE}
-  if(all(as.character(Rheader)==as.character(Gheader))==FALSE){dowarp=TRUE}
-  if(all(as.character(Rheader)==as.character(Gheader))==FALSE){dowarp=TRUE}
+  if(dowarp=='auto'){
+    dowarp=FALSE
+    if(all(dim(R)==dim(G))==FALSE){dowarp=TRUE}
+    if(all(dim(R)==dim(B))==FALSE){dowarp=TRUE}
+    if(all(as.character(Rheader)==as.character(Gheader))==FALSE){dowarp=TRUE}
+    if(all(as.character(Rheader)==as.character(Gheader))==FALSE){dowarp=TRUE}
+  }
   
   if(dowarp){
     R=magwarp(image_in=R, header_out=header_out, header_in=Rheader, direction=direction, boundary=boundary, interpolation=interpolation)$image
@@ -196,9 +208,9 @@ magimageWCSRGB=function(R, G, B, header_out, Rheader, Gheader, Bheader, directio
   output=magimageRGB(R=R, G=G, B=B, axes=FALSE, ...)
   box()
   
-  magimageWCSGrid(header=header_out, n=n, grid.col=grid.col, grid.lty=grid.lty, grid.lwd=grid.lwd, coord.type=coord.type, loc.diff=loc.diff, pretty=pretty, CRVAL1=CRVAL1, CRVAL2=CRVAL2, CRPIX1=CRPIX1, CRPIX2=CRPIX2, CD1_1=CD1_1, CD1_2=CD1_2, CD2_1=CD2_1, CD2_2=CD2_2)
-  magimageWCSLabels(header=header_out, n=n, lab.col=lab.col, coord.type=coord.type, margin=margin, loc.diff=loc.diff, xlab=xlab, ylab=ylab, mgp=mgp, mtline=mtline, pretty=pretty, CRVAL1=CRVAL1, CRVAL2=CRVAL2, CRPIX1=CRPIX1, CRPIX2=CRPIX2, CD1_1=CD1_1, CD1_2=CD1_2, CD2_1=CD2_1, CD2_2=CD2_2)
-  magimageWCSCompass(header=header_out, position=position, com.col=com.col, com.length=com.length, loc.diff=loc.diff, CRVAL1=CRVAL1, CRVAL2=CRVAL2, CRPIX1=CRPIX1, CRPIX2=CRPIX2, CD1_1=CD1_1, CD1_2=CD1_2, CD2_1=CD2_1, CD2_2=CD2_2)
+  magimageWCSGrid(header=header_out, n=n, grid.col=grid.col, grid.lty=grid.lty, grid.lwd=grid.lwd, coord.type=coord.type, loc.diff=loc.diff, pretty=pretty, CRVAL1=CRVAL1, CRVAL2=CRVAL2, CRPIX1=CRPIX1, CRPIX2=CRPIX2, CD1_1=CD1_1, CD1_2=CD1_2, CD2_1=CD2_1, CD2_2=CD2_2, CTYPE1=CTYPE1, CTYPE2=CTYPE2)
+  magimageWCSLabels(header=header_out, n=n, lab.col=lab.col, coord.type=coord.type, margin=margin, loc.diff=loc.diff, xlab=xlab, ylab=ylab, mgp=mgp, mtline=mtline, pretty=pretty, CRVAL1=CRVAL1, CRVAL2=CRVAL2, CRPIX1=CRPIX1, CRPIX2=CRPIX2, CD1_1=CD1_1, CD1_2=CD1_2, CD2_1=CD2_1, CD2_2=CD2_2, CTYPE1=CTYPE1, CTYPE2=CTYPE2)
+  magimageWCSCompass(header=header_out, position=position, com.col=com.col, com.length=com.length, loc.diff=loc.diff, CRVAL1=CRVAL1, CRVAL2=CRVAL2, CRPIX1=CRPIX1, CRPIX2=CRPIX2, CD1_1=CD1_1, CD1_2=CD1_2, CD2_1=CD2_1, CD2_2=CD2_2, CTYPE1=CTYPE1, CTYPE2=CTYPE2)
   
   return=output
 }
