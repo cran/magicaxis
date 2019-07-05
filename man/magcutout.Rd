@@ -29,7 +29,7 @@ loc.diff = c(0, 0))
 Numeric matrix; required, the image we want to decorate. If \option{image} is a list as created by \code{readFITS}, \code{read.fits} of \code{\link{magcutoutWCS}} then the image part of these lists is parsed to \option{image} and the correct header part is parsed to \option{header}.
 }
   \item{header}{
-Full FITS header in table or vector format. Legal table format headers are provided by the \code{read.fitshdr} function or the \option{hdr} list output of \code{read.fits} in the astro package; the \option{hdr} output of \code{readFITS} in the \code{FITSio} package or the \option{header} output of \code{magcutoutWCS}. If a header is provided then key words will be taken from here as a priority. Missing header keywords are printed out and other header option arguments are used in these cases.
+Full FITS header in table or vector format. Legal table format headers are provided by the \code{read.fitshdr} function or the \option{hdr} list output of \code{read.fits} in the \code{astro} package; the \option{hdr} output of \code{readFITS} in the \code{FITSio} package or the \option{header} output of \code{magcutoutWCS}. If a header is provided then key words will be taken from here as a priority. Missing header keywords are printed out and other header option arguments are used in these cases.
 }
   \item{loc}{
 Numeric vector; the [x,y] (\code{magcutout}) or [x,y] / [RA,Dec] (\code{magcutoutWCS}) location where we want to cutout the image. For \code{magcutoutWCS} the unit type can be specified with the \option{loc.type} option. Either it is WCS in degrees [RA,Dec] (coord) or  pixel [x,y] of the \option{image} (image).
@@ -166,7 +166,7 @@ magcutoutWCS(image, loc=c(50.5,50.5), loc.type = 'image', plot=TRUE)
 
 #We can cut out using the coordinates instead:
 print({tempcoord=magWCSxy2radec(50.5,50.5,header=image$hdr)})
-magcutoutWCS(image, loc=tempcoord, plot=TRUE)
+magcutoutWCS(image, loc=tempcoord, loc.type=c('coord','image'), plot=TRUE)
 
 #You can select coordinates too:
 
@@ -198,27 +198,46 @@ loc = c(300,340)
 box = c(200,200)
 loc.type = c("image","image")
 
-# By default, the cutout is exactly the request size, but the centre is shifted:
+magimage(image$imDat)
+points(loc[1], loc[2], col='red')
 
-cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
-	plot=TRUE, shiftloc=TRUE, paddim=TRUE)
+# Setting shiftloc=FALSE and paddim=TRUE pads the image with NAs (default):
 
-# Setting shiftloc=FALSE pads the image with NAs instead, preserving the size:
+cutim=magcutout(image$imDat, loc=loc, box=box, plot=TRUE, shiftloc=FALSE, paddim=TRUE)
+points(cutim$loc[1], cutim$loc[2], col='red')
 
 cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
 	plot=TRUE, shiftloc=FALSE, paddim=TRUE)
+points(cutim$loc[1], cutim$loc[2], col='red')
+	
+# The cutout is exactly the request size, but the centre is shifted:
+
+cutim=magcutout(image$imDat, loc=loc, box=box, plot=TRUE, shiftloc=TRUE, paddim=TRUE)
+points(cutim$loc[1], cutim$loc[2], col='red')
+
+cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
+	plot=TRUE, shiftloc=TRUE, paddim=TRUE)
+points(cutim$loc[1], cutim$loc[2], col='red')
 
 # Setting paddim=FALSE returns the largest possible cutout within the image bounds,
 # without shifting the centre:
 
+cutim=magcutout(image$imDat, loc=loc, box=box, plot=TRUE, shiftloc=FALSE, paddim=FALSE)
+points(cutim$loc[1], cutim$loc[2], col='red')
+
 cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
   plot=TRUE, shiftloc=FALSE, paddim=FALSE)
+points(cutim$loc[1], cutim$loc[2], col='red')
 
 # Setting paddim=FALSE and shiftloc=TRUE returns a larger cutout, but with at most
 # box/2 padding on either side:
 
+cutim=magcutout(image$imDat, loc=loc, box=box, plot=TRUE, shiftloc=TRUE, paddim=FALSE)
+points(cutim$loc[1], cutim$loc[2], col='red')
+
 cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
   plot=TRUE, shiftloc=TRUE, paddim=FALSE)
+points(cutim$loc[1], cutim$loc[2], col='red')
 
 # Setting shiftloc=FALSE and requesting a box size larger than the image returns a cutout
 # with the requested box size:
@@ -226,7 +245,7 @@ cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.typ
 box = c(400,400)
 cutim=magcutoutWCS(image, loc=loc, box=box, coord.type="image", loc.type=loc.type,
 plot=TRUE, shiftloc=FALSE, paddim=TRUE)
-
+points(cutim$loc[1], cutim$loc[2], col='red')
 }
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
