@@ -1,8 +1,18 @@
 magcutout=function(image, loc = dim(image)/2, box = c(100, 100), shiftloc=FALSE, paddim=TRUE, plot = FALSE, ...){
+  
+  if(length(image)==1){
+    if(is.character(image) & 'fst' %in% .packages()){
+      image = fst::fst(image)
+    }else{
+      stop('Target image must be fst file!')
+    }
+  }
+  
   loc = as.numeric(loc)
   xcen = loc[1]
   ycen = loc[2]
   loc = ceiling(loc)
+  box = ceiling(box)
   if(length(box)==1){box=rep(box,2)}
   xlo = ceiling(loc[1] - (box[1]/2 - 0.5))
   xhi = ceiling(loc[1] + (box[1]/2 - 0.5))
@@ -52,7 +62,7 @@ magcutout=function(image, loc = dim(image)/2, box = c(100, 100), shiftloc=FALSE,
   if(length(xsel)==0 | length(ysel)==0){
     image=matrix(NA,box[1],box[2])
   }else{
-    image = image[xsel, ysel]
+    image = as.matrix(image[xsel, ysel])
     if(paddim && !shiftloc && any(c(diffxlo,-diffxhi,diffylo,-diffyhi) < 0)) {
     	padded = matrix(NA,box[1],box[2])
     	padded[xsel-diffxlo,ysel-diffylo] = image
