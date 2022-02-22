@@ -309,7 +309,7 @@
   return(output)
 }
 
-plot.magbin = function(x, colramp=hcl.colors(1e4), colstretch='lin', sizestretch='lin',
+plot.magbin = function(x, colramp=hcl.colors(21), colstretch='lin', sizestretch='lin',
                        colref='count', sizeref='none', add=FALSE, dobar=TRUE, title=colref,
                        colnorm=FALSE, projden=FALSE, xdata=NULL, ydata=NULL, pch.dust='.', cex.dust=1, ...){
   dots=list(...)
@@ -351,19 +351,21 @@ plot.magbin = function(x, colramp=hcl.colors(1e4), colstretch='lin', sizestretch
   if(add==FALSE){
     if(projden & !is.null(xdata) & !is.null(ydata)){
       layout(matrix(c(2,4,1,3),2), widths = c(0.9,0.1), heights = c(0.1,0.9))
-      par(oma=c(3.1,3.1,1.1,1.1))
+      par(oma=c(3.1,3.1,0.6,0.6))
       #1 (topright)
+      par(mar=c(0,0,0,0))
       plot.new()
       #2 (topleft)
       tempden = density(xdata, from=x$xlim[1], to=x$xlim[2], na.rm=TRUE)
       par(mar=c(0,0,0,0))
-      magplot(tempden$x, tempden$y, xlim=x$xlim, type='l', side=c(1,2), labels=c(F,T), ylab='PDF',
-              majorn=c(5,2))
+      magplot(tempden$x, tempden$y, xlim=x$xlim, ylim=c(0,max(tempden$y)*1.04), type='l', ylab='',
+              majorn=c(5,2), side=FALSE)
+      
       #3 (bottomleft)
       tempden = density(ydata, from=x$ylim[1], to=x$ylim[2], na.rm=TRUE)
       par(mar=c(0,0,0,0))
-      magplot(tempden$y, tempden$x, ylim=x$ylim, type='l', side=c(1,2), labels=c(T,F), xlab='PDF', 
-              majorn=c(2,5))
+      magplot(tempden$y, tempden$x, xlim=c(0,max(tempden$y)*1.04), ylim=x$ylim, type='l', xlab='', 
+              majorn=c(2,5), side=FALSE)
       #4 (bottomright)
       par(mar=c(0,0,0,0))
       do.call("magplot", c(list(NA, NA, xlim=xlim, ylim=ylim, side=c(1,2,3,4), labels=c(T,T,F,F)), dots))
@@ -424,7 +426,7 @@ plot.magbin = function(x, colramp=hcl.colors(1e4), colstretch='lin', sizestretch
 }
 
 magbin = function(x, y, z=NULL, xlim=NULL, ylim=NULL, zlim=NULL, step=NULL, log='', unlog=log, clustering=10,
-                  dustlim=0.1, shape='hex', plot=TRUE, colramp=hcl.colors(1e4),
+                  dustlim=0.1, shape='hex', plot=TRUE, colramp=hcl.colors(21),
                   colstretch='lin', sizestretch='lin', colref='count', sizeref='none',
                   funstat=function(x) median(x, na.rm=TRUE), direction='h',
                   offset=0, jitterseed=666, projden=FALSE, ...){

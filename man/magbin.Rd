@@ -10,7 +10,7 @@ Allows for 2D binning (counts) and summary statistics on 2D bins (medians etc).
 \usage{
 magbin(x, y, z = NULL, xlim = NULL, ylim = NULL, zlim = NULL, step = NULL,
 log = '', unlog = log, clustering = 10, dustlim = 0.1, shape = "hex",
-plot = TRUE, colramp = hcl.colors(1e4), colstretch = "lin", sizestretch = "lin",
+plot = TRUE, colramp = hcl.colors(21), colstretch = "lin", sizestretch = "lin",
 colref = "count", sizeref = "none", funstat = function(x) median(x, na.rm=TRUE),
 direction = 'h', offset = 0, jitterseed = 666, projden = FALSE, ...)
 }
@@ -68,7 +68,7 @@ Character scalar; size stretch, either linear (lin, default) or logarithmic (log
 Character scalar; colour reference for call, either it should be based on the counts (count, default) or the z-axis statistic (zstat)?
 }
   \item{sizeref}{
-Character scalar; colour reference for call, either it should be ignored (none, so all are the same size and closely packed), based on the counts (count) or the z-axis statistic (zstat)?
+Character scalar; size reference for call, either it should be ignored (none, so all are the same size and closely packed), based on the counts (count) or the z-axis statistic (zstat)?
 }
   \item{funstat}{
 Function; function to use to compute a statistic over the \option{z} axis. The default is \code{\link{median}}, but other good options might be \code{\link{mean}}, \code{\link{sd}}, \code{\link{mad}}. Note, to change default arguments you might need to send through a new function, e.g. \option{funstat} = function(x) median(x, na.rm=TRUE) and similar, but if you are happy with the defaults then you can use the simpler \option{funstat} = mean etc.
@@ -86,7 +86,7 @@ Integer scalar; the random seed to use for jittering (means you can recreate you
 Logical; do you want projected density PDFs to be displayed above and to the side of the standard \code{plot.magbin} plot? If so you also need to pass the same \option{xdata} and \option{ydata} that you originally sent to \code{\link{magbin}}, since this is not stored in the object output from \code{\link{magbin}}. 
 }
   \item{\dots}{
-Dots to be passed to \code{\link{magplot}}, \code{\link{magmap}} and \code{\link{magmap}}. Relevant arguments are matched, so look in those functions for optional arguments to pass.
+Dots to be passed to \code{\link{magplot}}, \code{\link{magmap}} and \code{\link{magbar}}. Relevant arguments are matched, so look in those functions for optional arguments to pass.
 }
 }
 \details{
@@ -104,6 +104,7 @@ List of class 'magbin' containing:
 \item{step }{\option{step} size}
 \item{dustlim}{\option{dustlim}}
 \item{shape}{\option{shape}}
+\item{direction}{\option{direction}}
 }
 
 \seealso{
