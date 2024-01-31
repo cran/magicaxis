@@ -1,4 +1,21 @@
-magproj=function(long, lat, type='b', plottext, longlim=c(-180,180), latlim=c(-90,90), projection="aitoff", parameters=NULL, centre=c(0,0), add=FALSE, fliplong=FALSE, nlat=6, nlong=6, prettybase=30, labels=TRUE, grid=TRUE, grid.col='grey', grid.lty=2, auto=FALSE, upres=100, box=TRUE, labloc=c(90,-45), labeltype='deg', crunch=FALSE, ...){
+".Last.magproj"<-
+  local({
+    val <- list(
+      projection = "", 
+      parameters = NULL, 
+      orientation = NULL,
+      centre = NULL,
+      longlim = NULL,
+      latlim = NULL
+      )
+    function(new) if(!missing(new)) val <<- new else val
+  })
+
+magproj=function(long, lat, type='b', plottext, longlim=c(-180,180), latlim=c(-90,90),
+                 projection="aitoff", parameters=NULL, centre=c(0,0), add=FALSE,
+                 fliplong=FALSE, nlat=6, nlong=6, prettybase=30, labels=TRUE, grid=TRUE,
+                 grid.col='grey', grid.lty=2, auto=FALSE, upres=100, box=TRUE, labloc=c(90,-45),
+                 labeltype='deg', crunch=FALSE, ...){
   
   if(is.matrix(long) | is.data.frame(long)){
     lat = long[, 2]
@@ -9,13 +26,13 @@ magproj=function(long, lat, type='b', plottext, longlim=c(-180,180), latlim=c(-9
   if(length(lat)>1 & length(long)==1){long=rep(long,length(lat))}
   
   if(add==TRUE){
-    projection=.Last.projection()$projection
-    parameters=.Last.projection()$parameters
-    orientation=.Last.projection()$orientation
-    centre=.Last.projection()$centre
-    labloc=.Last.projection()$labloc
-    longlim=.Last.projection()$longlim
-    latlim=.Last.projection()$latlim
+    projection=.Last.magproj()$projection
+    parameters=.Last.magproj()$parameters
+    orientation=.Last.magproj()$orientation
+    centre=.Last.magproj()$centre
+    labloc=.Last.magproj()$labloc
+    longlim=.Last.magproj()$longlim
+    latlim=.Last.magproj()$latlim
   }else{
     orientation=c(90+centre[2], centre[1] %% 360, 0)
     if(longlim[1]<orientation[2]-180){
@@ -34,14 +51,22 @@ magproj=function(long, lat, type='b', plottext, longlim=c(-180,180), latlim=c(-9
       latlim=range(lat)
       latlim=latlim+diff(latlim)*c(-0.1,0.1)
       if(projection!='gnomonic'){
-        orientation[1]=90-mean(latlim)
+        orientation[1]=90 + mean(latlim)
       }else{
-        orientation[1]=mean(latlim)
+        orientation[1] = mean(latlim)
       }
-      orientation[2]=mean(longlim)
-      labloc=c(longlim[1], latlim[1])
+      orientation[2] = mean(longlim)
+      labloc = c(longlim[1], latlim[1])
     }
       
+    .Last.magproj(list(projection = projection,
+                      parameters = parameters,
+                      orientation = orientation,
+                      centre = centre,
+                      longlim = longlim,
+                      latlim = latlim)
+                 )
+    
     limgrid=expand.grid(seq(longlim[1],longlim[2],len=100),seq(latlim[1],latlim[2],len=100))
     templims=mapproject(limgrid[,1], limgrid[,2], projection=projection, parameters=parameters, orientation=orientation)
     plot.new()
@@ -219,13 +244,12 @@ magproj=function(long, lat, type='b', plottext, longlim=c(-180,180), latlim=c(-9
   if(add==FALSE & box==TRUE){
     magproj(long=longlim+c(1e-9,-1e-9), lat=latlim+c(1e-9,-1e-9), add=TRUE, border='black', lwd=2)
   }
-  .Last.projection(list(projection=.Last.projection()$projection, parameters=.Last.projection()$parameters, orientation=.Last.projection()$orientation, centre=centre, longlim=longlim, latlim=latlim))
 }
 
 magprojgrid=function(nlat=6, nlong=6, prettybase=30, box=TRUE, ...){
-  centre=.Last.projection()$centre
-  longlim=.Last.projection()$longlim
-  latlim=.Last.projection()$latlim
+  centre=.Last.magproj()$centre
+  longlim=.Last.magproj()$longlim
+  latlim=.Last.magproj()$latlim
   longgrid=maglab(longlim, n=nlong, prettybase = prettybase)
   latgrid=maglab(latlim, n=nlat, prettybase = prettybase)
   longpretty=longgrid$tickat
@@ -241,13 +265,13 @@ magprojgrid=function(nlat=6, nlong=6, prettybase=30, box=TRUE, ...){
   if(box){
     magproj(long=longlim+c(1e-9,-1e-9), lat=latlim+c(1e-9,-1e-9), add=TRUE, border='black', lwd=2)
   }
-  .Last.projection(list(projection=.Last.projection()$projection, parameters=.Last.projection()$parameters, orientation=.Last.projection()$orientation, centre=centre, longlim=longlim, latlim=latlim))
+  .Last.magproj(list(projection=.Last.magproj()$projection, parameters=.Last.magproj()$parameters, orientation=.Last.magproj()$orientation, centre=centre, longlim=longlim, latlim=latlim))
 }
 
 magprojlabels=function(nlat=6, nlong=6, prettybase=30, labloc = c(90, -45), labeltype='deg', crunch=FALSE, ...){
-  centre=.Last.projection()$centre
-  longlim=.Last.projection()$longlim
-  latlim=.Last.projection()$latlim
+  centre=.Last.magproj()$centre
+  longlim=.Last.magproj()$longlim
+  latlim=.Last.magproj()$latlim
   longgrid=maglab(longlim, n=nlong, prettybase = prettybase)
   latgrid=maglab(latlim, n=nlat, prettybase = prettybase)
   longpretty=longgrid$tickat
@@ -267,5 +291,5 @@ magprojlabels=function(nlat=6, nlong=6, prettybase=30, labloc = c(90, -45), labe
     if(crunch==FALSE){text(temp,labels = deg2dms(latpretty,type='cat'), ...)}
     if(crunch==TRUE){text(temp,labels = paste(deg2dms(latpretty,type='mat')[,1],'\u00B0',sep=''), ...)}
   }
-  .Last.projection(list(projection=.Last.projection()$projection, parameters=.Last.projection()$parameters, orientation=.Last.projection()$orientation, centre=centre, longlim=longlim, latlim=latlim))
+  .Last.magproj(list(projection=.Last.magproj()$projection, parameters=.Last.magproj()$parameters, orientation=.Last.magproj()$orientation, centre=centre, longlim=longlim, latlim=latlim))
 }

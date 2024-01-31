@@ -190,7 +190,7 @@
   }
 }
 
-.magbincount = function(x, y, z=NULL, xlim=NULL, ylim=NULL, zlim=NULL, step=NULL,
+.magbincount = function(x, y, z=NULL, xlim=NULL, ylim=NULL, zlim=NULL, Nbin=50, step=NULL,
                         clustering=10, dustlim=NA, shape='hex', funstat=function(x) median(x, na.rm=TRUE),
                         direction='h', offset=0, jitterseed=666){
   if(is.null(z)){
@@ -217,7 +217,7 @@
   }
   use = which(use)
   if(is.null(step)){
-    step = c(diff(xlim)/50,diff(ylim)/50)
+    step = c(diff(xlim), diff(ylim))/Nbin
   }
   if(length(step)==1){
     step = rep(step,2)
@@ -311,7 +311,7 @@
 
 plot.magbin = function(x, colramp=hcl.colors(21), colstretch='lin', sizestretch='lin',
                        colref='count', sizeref='none', add=FALSE, dobar=TRUE, title=colref,
-                       colnorm=FALSE, projden=FALSE, xdata=NULL, ydata=NULL, pch.dust='.', cex.dust=1, ...){
+                       colnorm=FALSE, projden=FALSE, projsig=FALSE, xdata=NULL, ydata=NULL, pch.dust='.', cex.dust=1, ...){
   dots=list(...)
   dotskeepmap=c("locut", "hicut", "flip", "type", "stretchscale", "clip" )
   dotskeepbar=c("position", "orient", "scale", "inset", "labN", "titleshift", "centrealign")
@@ -360,12 +360,19 @@ plot.magbin = function(x, colramp=hcl.colors(21), colstretch='lin', sizestretch=
       par(mar=c(0,0,0,0))
       magplot(tempden$x, tempden$y, xlim=x$xlim, ylim=c(0,max(tempden$y)*1.04), type='l', ylab='',
               majorn=c(5,2), side=FALSE)
+      if(projsig){
+        abline(v=quantile(xdata, pnorm(c(-1,1)), na.rm=TRUE), lty=3, col='darkgrey')
+      }
       
       #3 (bottomleft)
       tempden = density(ydata, from=x$ylim[1], to=x$ylim[2], na.rm=TRUE)
       par(mar=c(0,0,0,0))
       magplot(tempden$y, tempden$x, xlim=c(0,max(tempden$y)*1.04), ylim=x$ylim, type='l', xlab='', 
               majorn=c(2,5), side=FALSE)
+      if(projsig){
+        abline(h=quantile(ydata, pnorm(c(-1,1)), na.rm=TRUE), lty=3, col='darkgrey')
+      }
+      
       #4 (bottomright)
       par(mar=c(0,0,0,0))
       do.call("magplot", c(list(NA, NA, xlim=xlim, ylim=ylim, side=c(1,2,3,4), labels=c(T,T,F,F)), dots))
@@ -425,11 +432,11 @@ plot.magbin = function(x, colramp=hcl.colors(21), colstretch='lin', sizestretch=
   }
 }
 
-magbin = function(x, y, z=NULL, xlim=NULL, ylim=NULL, zlim=NULL, step=NULL, log='', unlog=log, clustering=10,
+magbin = function(x, y, z=NULL, xlim=NULL, ylim=NULL, zlim=NULL, Nbin=50, step=NULL, log='', unlog=log, clustering=10,
                   dustlim=0.1, shape='hex', plot=TRUE, colramp=hcl.colors(21),
                   colstretch='lin', sizestretch='lin', colref='count', sizeref='none',
                   funstat=function(x) median(x, na.rm=TRUE), direction='h',
-                  offset=0, jitterseed=666, projden=FALSE, ...){
+                  offset=0, jitterseed=666, projden=FALSE, projsig=FALSE, ...){
   if(is.null(z)){
     if(!is.null(dim(x))){
       if(dim(x)[2]==3){z=unlist(x[,3])}
@@ -480,13 +487,13 @@ magbin = function(x, y, z=NULL, xlim=NULL, ylim=NULL, zlim=NULL, step=NULL, log=
     zlim=magclip(z[sel], sigma=zlim)$range
   }
   
-  bincount = .magbincount(x=x, y=y, z=z, xlim=xlim, ylim=ylim, zlim=zlim, step=step,
+  bincount = .magbincount(x=x, y=y, z=z, xlim=xlim, ylim=ylim, zlim=zlim, Nbin=Nbin, step=step,
                     clustering=clustering, dustlim=dustlim, shape=shape,
                     funstat=funstat, direction=direction, offset=offset, jitterseed=jitterseed)
   
   if(plot){
     plot(bincount, colramp=colramp, colstretch=colstretch, sizestretch=sizestretch,
-         colref=colref, sizeref=sizeref, unlog=unlog, projden=projden, xdata=x,
+         colref=colref, sizeref=sizeref, unlog=unlog, projden=projden, projsig=projsig, xdata=x,
          ydata=y, ...)
   }
   return(invisible(bincount))
